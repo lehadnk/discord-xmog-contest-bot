@@ -1,0 +1,6 @@
+node_modules
+.idea
+*.iml
+test-db.db3
+build/*
+.env

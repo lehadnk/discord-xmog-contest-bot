@@ -1,0 +1,38 @@
+{
+  "name": "discord-xmog-contest-bot",
+  "version": "0.1.0",
+  "description": "The bot for handling xmog contests in discord",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "node_modules/.bin/ts-node test/startup.ts && node_modules/.bin/mocha --opts ./mocha.opts",
+    "tsc": "node_modules/typescript/bin/tsc --listEmittedFiles",
+    "migrate": "node_modules/db-migrate/bin/db-migrate"
+  },
+  "keywords": [
+    "typescript",
+    "discord",
+    "bot"
+  ],
+  "author": "Alexey Zauzin <lehadnk@gmail.com>",
+  "dependencies": {
+    "@types/dotenv": "^6.1.1",
+    "@types/sqlite3": "^3.1.5",
+    "db-migrate": "^0.11.5",
+    "db-migrate-sqlite3": "^0.4.0",
+    "discord.js": "^11.5.0",
+    "dotenv": "^8.0.0",
+    "sqlite3": "^4.0.8",
+    "typescript": "^2.9.2"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^2.2.48",
+    "@types/sinon": "^2.3.7",
+    "@types/sinon-chai": "^2.7.35",
+    "chai": "^4.2.0",
+    "mocha": "^6.1.4",
+    "sinon": "^4.5.0",
+    "sinon-chai": "^2.14.0",
+    "ts-node": "^8.2.0"
+  }
+}
