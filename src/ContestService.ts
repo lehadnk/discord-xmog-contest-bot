@@ -6,6 +6,7 @@ import {AddParticipantRequest} from "./DTO/Requests/AddParticipantRequest";
 import {VoteForParticipantResult} from "./DTO/Results/VoteForParticipantResult";
 import {Vote} from "./Models/Vote";
 import {VoteForParticipantRequest} from "./DTO/Requests/VoteForParticipantRequest";
+import {DatabaseError, DatabaseErrorCode} from "./Exceptions/DatabaseError";
 
 export class ContestService {
     private participantRepository: IParticipantRepository;
@@ -26,9 +27,19 @@ export class ContestService {
                         return;
                     } else {
                         let participant = new Participant(null, request.participantName, request.participantRealm);
-                        this.participantRepository.addParticipant(participant).then(() => {
-                            resolve(new AddParticipantResult(true));
-                        })
+                        this.participantRepository
+                            .addParticipant(participant)
+                            .then(() => {
+                                resolve(new AddParticipantResult(true));
+                            }).catch(reason => {
+                                if (typeof reason != DatabaseError.name) {
+                                    resolve(new AddParticipantResult(false, 'Произошла системная ошибка, попробуйте позднее'));
+                                    return;
+                                }
+
+                                let msg = reason.code == DatabaseErrorCode.ContraintViolation ? 'Вы уже учавствуете в конкурсе' : 'Произошла системная ошибка, попробуйте позднее';
+                                resolve(new AddParticipantResult(false, msg));
+                            });
                     }
                 })
         });
@@ -39,7 +50,6 @@ export class ContestService {
             this.participantRepository
                 .getParticipant(request.characterName, request.characterRealm)
                 .then(participant => {
-                    // console.log(participant);
                     if (participant == null) {
                         resolve(new VoteForParticipantResult(false, 'Такой персонаж не учавствует в конкурсе. Вы точно правильно указали его имя?'));
                         return;
@@ -57,7 +67,16 @@ export class ContestService {
                             this.votesRepository
                                 .addVote(vote)
                                 .then(result => {
-                                   resolve(new VoteForParticipantResult(true));
+                                    resolve(new VoteForParticipantResult(true));
+                                })
+                                .catch(reason => {
+                                    if (typeof reason != DatabaseError.name) {
+                                        resolve(new VoteForParticipantResult(false, 'Произошла системная ошибка, попробуйте позднее'));
+                                        return;
+                                    }
+
+                                    let msg = reason.code == DatabaseErrorCode.ContraintViolation ? 'Вы уже голосовали за этого персонажа!' : 'Произошла системная ошибка, попробуйте позднее';
+                                    resolve(new VoteForParticipantResult(false, msg));
                                 });
                         })
                 });

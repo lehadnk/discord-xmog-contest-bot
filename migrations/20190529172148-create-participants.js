@@ -14,13 +14,15 @@ exports.setup = function(options, seedLink) {
   seed = seedLink;
 };
 
-exports.up = function(db) {
-  return db.createTable('participants', {
+exports.up = async function(db) {
+  await db.createTable('participants', {
     id: { type: 'int', primaryKey: true, autoIncrement: true},
     name: 'string',
     realm: 'string',
     imageUrl: 'string',
   });
+
+  db.addIndex('participants', 'unique_name_and_realm', ['name', 'realm'], true);
 };
 
 exports.down = function(db) {

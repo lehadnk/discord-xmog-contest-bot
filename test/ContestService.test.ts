@@ -65,7 +65,29 @@ describe('Test Participant Repository', () => {
         expect(result.isSuccess).to.be.false;
     });
 
-    it('attempts to time attack voting for existing participant', async() => {
+    it('attempts to race condition attack registration', async() => {
+        let addParticipantResult1 = contestService.handleAddParticipantRequest(
+            new AddParticipantRequest(
+                'Таллиссия',
+                'Азурегос',
+                'http://google.com/123.jpg'
+            )
+        );
+
+        let addParticipantResult2 = contestService.handleAddParticipantRequest(
+            new AddParticipantRequest(
+                'Таллиссия',
+                'Азурегос',
+                'http://google.com/123.jpg'
+            )
+        );
+
+        expect(
+            (await addParticipantResult1).isSuccess !== (await addParticipantResult2).isSuccess
+        ).to.be.true;
+    });
+
+    it('attempts to race condition attack voting for existing participant', async() => {
         await contestService.handleAddParticipantRequest(
             new AddParticipantRequest(
                 'Нейши',
@@ -89,10 +111,9 @@ describe('Test Participant Repository', () => {
             )
         );
 
-        let result1 = await voteResult1;
-        let result2 = await voteResult2;
-        expect(result1.isSuccess).to.be.true;
-        expect(result2.isSuccess).to.be.false;
+        expect(
+            (await voteResult1).isSuccess !== (await voteResult2).isSuccess
+        ).to.be.true;
     });
 
     it('attempts to vote for non-existing participant', async() => {

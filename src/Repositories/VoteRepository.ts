@@ -1,8 +1,7 @@
 import {DbAdapter} from "../DbAdapter";
-import {Participant} from "../Models/Participant";
-import {IParticipantRepository} from "./IParticipantRepository";
 import {IVoteRepository} from "./IVoteRepository";
 import {Vote} from "../Models/Vote";
+import {DatabaseError, DatabaseErrorCode} from "../Exceptions/DatabaseError";
 
 export class VoteRepository implements IVoteRepository {
     private db: DbAdapter;
@@ -12,7 +11,7 @@ export class VoteRepository implements IVoteRepository {
     }
 
     addVote(vote: Vote): Promise<void> {
-        return new Promise<void>(resolve => {
+        return new Promise<void>((resolve, reject) => {
             this.db.run(
                 "INSERT INTO votes(participant_id, voter_discord_id) VALUES (?1, ?2);",
                 {
@@ -21,6 +20,12 @@ export class VoteRepository implements IVoteRepository {
                 }
             ).then(result => {
                 resolve();
+            }).catch(reason => {
+                if (reason.toString().substr(0, 17) == 'SQLITE_CONSTRAINT') {
+                    reject(new DatabaseError(DatabaseErrorCode.ContraintViolation, 'This participant is already existing'));
+                    return;
+                }
+                reject(new DatabaseError(DatabaseErrorCode.Other, reason.toString()));
             });
         });
     }
