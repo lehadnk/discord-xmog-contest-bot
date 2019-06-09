@@ -37,7 +37,7 @@ export class ContestService {
                                     return;
                                 }
 
-                                let msg = reason.code == DatabaseErrorCode.ContraintViolation ? 'Вы уже учавствуете в конкурсе' : 'Произошла системная ошибка, попробуйте позднее';
+                                let msg = reason.code == DatabaseErrorCode.ConstraintViolation ? 'Вы уже учавствуете в конкурсе' : 'Произошла системная ошибка, попробуйте позднее';
                                 resolve(new AddParticipantResult(false, msg));
                             });
                     }
@@ -68,18 +68,17 @@ export class ContestService {
                                 .addVote(vote)
                                 .then(result => {
                                     resolve(new VoteForParticipantResult(true));
-                                })
-                                .catch(reason => {
+                                }).catch(reason => {
                                     if (typeof reason != DatabaseError.name) {
                                         resolve(new VoteForParticipantResult(false, 'Произошла системная ошибка, попробуйте позднее'));
                                         return;
                                     }
 
-                                    let msg = reason.code == DatabaseErrorCode.ContraintViolation ? 'Вы уже голосовали за этого персонажа!' : 'Произошла системная ошибка, попробуйте позднее';
+                                    let msg = reason.code == DatabaseErrorCode.ConstraintViolation ? 'Вы уже голосовали за этого персонажа!' : 'Произошла системная ошибка, попробуйте позднее';
                                     resolve(new VoteForParticipantResult(false, msg));
-                                });
+                            });
                         })
-                });
+                })
         });
     }
 }

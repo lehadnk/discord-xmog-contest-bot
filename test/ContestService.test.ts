@@ -1,6 +1,6 @@
 import {expect} from "chai";
 import {Database} from "sqlite3";
-import {DbAdapter} from "../src/DbAdapter";
+import {SqliteDbAdapter} from "../src/SqliteDbAdapter";
 import {Participant} from "../src/Models/Participant";
 import {ParticipantRepository} from "../src/Repositories/ParticipantRepository";
 import {VoteRepository} from "../src/Repositories/VoteRepository";
@@ -9,7 +9,7 @@ import {AddParticipantRequest} from "../src/DTO/Requests/AddParticipantRequest";
 import {VoteForParticipantRequest} from "../src/DTO/Requests/VoteForParticipantRequest";
 
 let db = new Database('./test-db.db3');
-let adapter = new DbAdapter(db);
+let adapter = new SqliteDbAdapter(db);
 let participantRepository = new ParticipantRepository(adapter);
 let votesRepository = new VoteRepository(adapter);
 let contestService = new ContestService(participantRepository, votesRepository);

@@ -1,12 +1,12 @@
 import {Database} from "sqlite3";
 import {Client} from 'discord.js';
-import {DbAdapter} from "./src/DbAdapter";
+import {SqliteDbAdapter} from "./src/SqliteDbAdapter";
 import {config as dotenvInit} from 'dotenv';
 
 dotenvInit();
 
 let db = new Database('./test-db.db3');
-let adapter = new DbAdapter(db);
+let adapter = new SqliteDbAdapter(db);
 adapter.one("SELECT 1;", []).then((result) => {
     console.log(result);
 });

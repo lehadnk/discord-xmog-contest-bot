@@ -1,12 +1,12 @@
-import {DbAdapter} from "../DbAdapter";
 import {IVoteRepository} from "./IVoteRepository";
 import {Vote} from "../Models/Vote";
 import {DatabaseError, DatabaseErrorCode} from "../Exceptions/DatabaseError";
+import {IDbAdapter} from "../IDbAdapter";
 
 export class VoteRepository implements IVoteRepository {
-    private db: DbAdapter;
+    private db: IDbAdapter;
 
-    constructor(db: DbAdapter) {
+    constructor(db: IDbAdapter) {
         this.db = db;
     }
 
@@ -20,13 +20,7 @@ export class VoteRepository implements IVoteRepository {
                 }
             ).then(result => {
                 resolve();
-            }).catch(reason => {
-                if (reason.toString().substr(0, 17) == 'SQLITE_CONSTRAINT') {
-                    reject(new DatabaseError(DatabaseErrorCode.ContraintViolation, 'This participant is already existing'));
-                    return;
-                }
-                reject(new DatabaseError(DatabaseErrorCode.Other, reason.toString()));
-            });
+            }).catch(reason => reject(reason));
         });
     }
 

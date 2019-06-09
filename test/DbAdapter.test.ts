@@ -1,11 +1,11 @@
 import {expect} from "chai";
 import {Database} from "sqlite3";
-import {DbAdapter} from "../src/DbAdapter";
+import {SqliteDbAdapter} from "../src/SqliteDbAdapter";
 
 let db = new Database('./test-db.db3');
-let adapter = new DbAdapter(db);
+let adapter = new SqliteDbAdapter(db);
 
-describe('Test DbAdapter', () => {
+describe('Test SqliteDbAdapter', () => {
     it('creates a table', async () => {
         const result = await adapter.run("CREATE TABLE test(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT)");
         expect(result).to.be.undefined;

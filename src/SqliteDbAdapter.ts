@@ -1,6 +1,8 @@
 import {Database} from "sqlite3";
+import {IDbAdapter} from "./IDbAdapter";
+import {DatabaseError, DatabaseErrorCode} from "./Exceptions/DatabaseError";
 
-export class DbAdapter {
+export class SqliteDbAdapter implements IDbAdapter {
 
     private db: Database;
 
@@ -8,7 +10,7 @@ export class DbAdapter {
         this.db = dbConnection;
     }
 
-    async value(sql:string, placeholders?: object): Promise<string> {
+    async value(sql: string, placeholders?: object): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             this.db.get(sql, placeholders, (err, row) => {
                 if (err !== null) {
@@ -19,7 +21,7 @@ export class DbAdapter {
                 let keys = Object.keys(row);
 
                 if (keys.length === 0) {
-                    reject("Query returned no result!");
+                    reject(new DatabaseError(DatabaseErrorCode.NoResult, "Query returned no result"));
                 }
 
                 resolve(row[keys[0]]);
@@ -27,7 +29,7 @@ export class DbAdapter {
         });
     }
 
-    async one(sql:string, placeholders?: object): Promise<any> {
+    async one(sql: string, placeholders?: object): Promise<any> {
         return new Promise((resolve, reject) => {
             this.db.get(sql, placeholders, (err, row) => {
                 if (err !== null) {
@@ -57,7 +59,12 @@ export class DbAdapter {
         return new Promise<void>((resolve, reject) => {
             this.db.run(sql, placeholders, (err) => {
                 if (err !== null) {
-                    reject(err.message);
+                    if (err.message.substr(0, 17) == 'SQLITE_CONSTRAINT') {
+                        reject(new DatabaseError(DatabaseErrorCode.ConstraintViolation, err.toString()));
+                        return;
+                    }
+
+                    reject(new DatabaseError(DatabaseErrorCode.Other, err.toString()));
                     return;
                 }
 

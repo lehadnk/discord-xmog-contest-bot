@@ -1,12 +1,12 @@
-import {DbAdapter} from "../DbAdapter";
 import {Participant} from "../Models/Participant";
 import {IParticipantRepository} from "./IParticipantRepository";
 import {DatabaseError, DatabaseErrorCode} from "../Exceptions/DatabaseError";
+import {IDbAdapter} from "../IDbAdapter";
 
 export class ParticipantRepository implements IParticipantRepository {
-    private db: DbAdapter;
+    private db: IDbAdapter;
 
-    constructor(db: DbAdapter) {
+    constructor(db: IDbAdapter) {
         this.db = db;
     }
 
@@ -17,13 +17,7 @@ export class ParticipantRepository implements IParticipantRepository {
                 2: participant.realm,
             }).then(() => {
                 resolve();
-            }).catch(reason => {
-                if (reason.toString().substr(0, 17) == 'SQLITE_CONSTRAINT') {
-                    reject(new DatabaseError(DatabaseErrorCode.ContraintViolation, 'This participant is already existing'));
-                    return;
-                }
-                reject(new DatabaseError(DatabaseErrorCode.Other, reason.toString()));
-            });
+            }).catch(reason => reject(reason));
         });
     }
 

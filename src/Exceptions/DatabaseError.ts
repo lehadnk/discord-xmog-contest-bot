@@ -1,6 +1,7 @@
 export enum DatabaseErrorCode {
-    ContraintViolation = 0,
-    Other = 1
+    ConstraintViolation = 0,
+    NoResult = 1,
+    Other = 2,
 }
 
 export class DatabaseError {

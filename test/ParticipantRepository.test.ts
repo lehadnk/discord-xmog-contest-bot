@@ -1,11 +1,11 @@
 import {expect} from "chai";
 import {Database} from "sqlite3";
-import {DbAdapter} from "../src/DbAdapter";
+import {SqliteDbAdapter} from "../src/SqliteDbAdapter";
 import {Participant} from "../src/Models/Participant";
 import {ParticipantRepository} from "../src/Repositories/ParticipantRepository";
 
 let db = new Database('./test-db.db3');
-let adapter = new DbAdapter(db);
+let adapter = new SqliteDbAdapter(db);
 let repository = new ParticipantRepository(adapter);
 
 describe('Test Participant Repository', () => {
