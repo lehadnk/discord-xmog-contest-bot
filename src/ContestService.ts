@@ -7,18 +7,31 @@ import {VoteForParticipantResult} from "./DTO/Results/VoteForParticipantResult";
 import {Vote} from "./Models/Vote";
 import {VoteForParticipantRequest} from "./DTO/Requests/VoteForParticipantRequest";
 import {DatabaseError, DatabaseErrorCode} from "./Exceptions/DatabaseError";
+import {ContestSettings} from "./DTO/ContestSettings";
 
 export class ContestService {
     private participantRepository: IParticipantRepository;
     private votesRepository: IVoteRepository;
+    private contestSettings: ContestSettings;
 
-    constructor(participantRepository: IParticipantRepository, votesRepository: IVoteRepository) {
+    constructor(participantRepository: IParticipantRepository, votesRepository: IVoteRepository, contestSettings: ContestSettings) {
         this.participantRepository = participantRepository;
         this.votesRepository = votesRepository;
+        this.contestSettings = contestSettings;
     }
 
     handleAddParticipantRequest(request: AddParticipantRequest): Promise<AddParticipantResult> {
         return new Promise<AddParticipantResult>(resolve => {
+            if (Date.now() < this.contestSettings.contestStartsAt) {
+                resolve(new AddParticipantResult(false, "Прием заявок на конкурс еще не начался"));
+                return;
+            }
+
+            if (Date.now() > this.contestSettings.contestEndsAt) {
+                resolve(new AddParticipantResult(false, "Конкурс уже окончился. Увидимся в следующем году!"))
+                return;
+            }
+
             this.participantRepository
                 .getParticipant(request.participantName, request.participantRealm)
                 .then(participant => {
@@ -47,6 +60,14 @@ export class ContestService {
 
     handleVoteForParticipantRequest(request: VoteForParticipantRequest): Promise<VoteForParticipantResult> {
         return new Promise<VoteForParticipantResult>(resolve => {
+
+            if (Date.now() < this.contestSettings.votingStartsAt) {
+                let votingStartsDate = new Date(this.contestSettings.votingStartsAt);
+                let votingStartsDateString = votingStartsDate.toLocaleDateString() + " " + votingStartsDate.toLocaleTimeString();
+                resolve(new VoteForParticipantResult(false, "Голосование еще не началось. Прием голосов начнется " + votingStartsDateString + "."))
+                return;
+            }
+
             this.participantRepository
                 .getParticipant(request.characterName, request.characterRealm)
                 .then(participant => {

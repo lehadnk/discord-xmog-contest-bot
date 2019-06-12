@@ -6,12 +6,15 @@ import {ParticipantRepository} from "../src/Repositories/ParticipantRepository";
 import {VoteRepository} from "../src/Repositories/VoteRepository";
 import {DiscordMessage} from "../src/DTO/DiscordMessage";
 import {expect} from "chai";
+import {ContestSettings} from "../src/DTO/ContestSettings";
 
 let db = new Database('./test-db.db3');
 let adapter = new SqliteDbAdapter(db);
 let participantRepository = new ParticipantRepository(adapter);
 let votesRepository = new VoteRepository(adapter);
-let contestService = new ContestService(participantRepository, votesRepository);
+let time = Date.now();
+let contestSettings = new ContestSettings(time - 1000, time + 2000, time - 500);
+let contestService = new ContestService(participantRepository, votesRepository, contestSettings);
 let controller = new DiscordController(contestService);
 
 describe('Test DiscordController:', () => {
