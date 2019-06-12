@@ -7,7 +7,6 @@ import {ContestService} from "../src/ContestService";
 import {AddParticipantRequest} from "../src/DTO/Requests/AddParticipantRequest";
 import {VoteForParticipantRequest} from "../src/DTO/Requests/VoteForParticipantRequest";
 import {ContestSettings} from "../src/DTO/ContestSettings";
-import {DiscordMessage} from "../src/DTO/DiscordMessage";
 
 let db = new Database('./test-db.db3');
 let adapter = new SqliteDbAdapter(db);
@@ -23,19 +22,34 @@ describe('Test Participant Repository', () => {
             new AddParticipantRequest(
                 'Нейшира',
                 'Азурегос',
-                'http://google.com/123.jpg'
+                'http://google.com/123.jpg',
+                '203465345326192353',
             )
         );
 
         expect(result.isSuccess).to.be.true;
     });
 
-    it('attempts to add the same participant again', async () => {
+    it('attempts to add the same participant again from another discord account', async () => {
         let result = await contestService.handleAddParticipantRequest(
             new AddParticipantRequest(
                 'Нейшира',
                 'Азурегос',
-                'http://google.com/123.jpg'
+                'http://google.com/123.jpg',
+                '138623940202949514',
+            )
+        );
+
+        expect(result.isSuccess).to.be.false;
+    });
+
+    it('attempts to add the another character from same discord account', async () => {
+        let result = await contestService.handleAddParticipantRequest(
+            new AddParticipantRequest(
+                'Нейшира',
+                'Азурегос',
+                'http://google.com/123.jpg',
+                '203465345326192353',
             )
         );
 
@@ -66,12 +80,25 @@ describe('Test Participant Repository', () => {
         expect(result.isSuccess).to.be.false;
     });
 
+    it('attempts person to vote himself', async() => {
+        let result = await contestService.handleVoteForParticipantRequest(
+            new VoteForParticipantRequest(
+                '203465345326192353',
+                'Нейшира',
+                'Азурегос'
+            )
+        );
+
+        expect(result.isSuccess).to.be.false;
+    });
+
     it('attempts to race condition attack registration', async() => {
         let addParticipantResult1 = contestService.handleAddParticipantRequest(
             new AddParticipantRequest(
                 'Таллиссия',
                 'Азурегос',
-                'http://google.com/123.jpg'
+                'http://google.com/123.jpg',
+                '320553294329843929'
             )
         );
 
@@ -79,7 +106,8 @@ describe('Test Participant Repository', () => {
             new AddParticipantRequest(
                 'Таллиссия',
                 'Азурегос',
-                'http://google.com/123.jpg'
+                'http://google.com/123.jpg',
+                '320553294329843929'
             )
         );
 
@@ -93,7 +121,8 @@ describe('Test Participant Repository', () => {
             new AddParticipantRequest(
                 'Нейши',
                 'Азурегос',
-                'http://google.com/123.jpg'
+                'http://google.com/123.jpg',
+                '950191302893824532'
             )
         );
 
@@ -137,7 +166,8 @@ describe('Test Participant Repository', () => {
             new AddParticipantRequest(
                 'Вульфер',
                 'Азурегос',
-                'http://google.com/123.jpg'
+                'http://google.com/123.jpg',
+                '943428493289250329'
             )
         );
 

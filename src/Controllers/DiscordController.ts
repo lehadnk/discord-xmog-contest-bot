@@ -40,7 +40,8 @@ export class DiscordController {
             let addParticipantRequest = new AddParticipantRequest(
                 validationResult.fields.characterName,
                 validationResult.fields.characterRealm,
-                validationResult.fields.embedImageUrl
+                validationResult.fields.embedImageUrl,
+                validationResult.fields.authorDiscordId,
             );
 
             this.contestService

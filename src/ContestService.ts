@@ -39,7 +39,13 @@ export class ContestService {
                         resolve(new AddParticipantResult(false, 'Вы уже зарегистрирваны в конкурсе'));
                         return;
                     } else {
-                        let participant = new Participant(null, request.participantName, request.participantRealm);
+                        let participant = new Participant(null,
+                            request.participantName,
+                            request.participantRealm,
+                            request.participantDiscordUserId,
+                            request.participantImageUrl
+                        );
+
                         this.participantRepository
                             .addParticipant(participant)
                             .then(() => {
@@ -73,6 +79,11 @@ export class ContestService {
                 .then(participant => {
                     if (participant == null) {
                         resolve(new VoteForParticipantResult(false, 'Такой персонаж не учавствует в конкурсе. Вы точно правильно указали его имя?'));
+                        return;
+                    }
+
+                    if (participant.discordUserId == request.voterDiscordId) {
+                        resolve(new VoteForParticipantResult(false, 'Вы не можете голосовать за себя'));
                         return;
                     }
 

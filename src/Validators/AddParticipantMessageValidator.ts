@@ -46,7 +46,8 @@ export class AddParticipantMessageValidator {
         return new ValidatorResult(true, null, {
             characterName,
             characterRealm,
-            embedImageUrl: msg.embedImageUrl[0]
+            embedImageUrl: msg.embedImageUrl[0],
+            authorDiscordId: msg.authorId,
         });
     }
 }

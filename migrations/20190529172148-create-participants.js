@@ -20,9 +20,11 @@ exports.up = async function(db) {
     name: 'string',
     realm: 'string',
     imageUrl: 'string',
+    discordUserId: 'string',
   });
 
   db.addIndex('participants', 'unique_name_and_realm', ['name', 'realm'], true);
+  db.addIndex('participants', 'unique_discord_user_id', ['discordUserId'], true);
 };
 
 exports.down = function(db) {

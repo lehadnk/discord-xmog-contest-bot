@@ -56,7 +56,7 @@ describe('Test DiscordController:', () => {
 
     it('dispatches a valid vote for character message to controller', async () => {
         let msg = new DiscordMessage(
-            '208939653426839552',
+            '943949230493204932',
             '512034124935426920',
             '120359014053436256',
             '/vote Селанаар - Азурегос',

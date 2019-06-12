@@ -12,9 +12,11 @@ export class ParticipantRepository implements IParticipantRepository {
 
     addParticipant(participant: Participant): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            this.db.run("INSERT INTO participants(name, realm) VALUES (?1, ?2);", {
+            this.db.run("INSERT INTO participants(name, realm, imageUrl, discordUserId) VALUES (?1, ?2, ?3, ?4);", {
                 1: participant.name,
                 2: participant.realm,
+                3: participant.imageUrl,
+                4: participant.discordUserId,
             }).then(() => {
                 resolve();
             }).catch(reason => reject(reason));
@@ -31,7 +33,7 @@ export class ParticipantRepository implements IParticipantRepository {
                     return resolve(null);
                 }
 
-                resolve(new Participant(row.id, row.name, row.realm));
+                resolve(new Participant(row.id, row.name, row.realm, row.discordUserId, row.imageUrl));
             });
         });
     }

@@ -10,7 +10,15 @@ let repository = new ParticipantRepository(adapter);
 
 describe('Test Participant Repository', () => {
     it('inserts participant to db', async () => {
-        let result = await repository.addParticipant(new Participant(null, 'Name', 'Realm'));
+        let result = await repository.addParticipant(
+            new Participant(
+                null,
+                'Name',
+                'Realm',
+                '937535923984239949',
+                'http://google.com/123.jpg')
+        );
+
         expect(result).to.be.undefined;
     });
 
@@ -18,7 +26,9 @@ describe('Test Participant Repository', () => {
         let result = await repository.getParticipant('Name', 'Realm');
         expect(result).to.be.deep.include({
             name: 'Name',
-            realm: 'Realm'
+            realm: 'Realm',
+            discordUserId: '937535923984239949',
+            imageUrl: 'http://google.com/123.jpg'
         });
     });
 
