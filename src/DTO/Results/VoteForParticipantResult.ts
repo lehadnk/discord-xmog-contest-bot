@@ -1,6 +1,6 @@
 export class VoteForParticipantResult {
-    public messageResponse: string;
-    public isSuccess: boolean;
+    public readonly messageResponse: string;
+    public readonly isSuccess: boolean;
 
     constructor(isSuccess: boolean, messageResponse?: string) {
         this.isSuccess = isSuccess;

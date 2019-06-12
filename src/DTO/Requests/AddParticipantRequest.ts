@@ -1,7 +1,7 @@
 export class AddParticipantRequest {
-    public participantImageUrl: string;
-    public participantName: string;
-    public participantRealm: string;
+    public readonly participantImageUrl: string;
+    public readonly participantName: string;
+    public readonly participantRealm: string;
 
     constructor(participantName: string, participantRealm: string, participantImageUrl: string) {
         this.participantName = participantName;

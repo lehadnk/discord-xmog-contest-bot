@@ -12,7 +12,6 @@ adapter.one("SELECT 1;", []).then((result) => {
 });
 
 let discordClient = new Client();
-
 discordClient.on("message", msg => {
     console.log(msg.content);
 });
