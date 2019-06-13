@@ -23,8 +23,8 @@ export class DiscordController {
         }
 
         // Spam message - we're just clearing it
-        return new Promise<DiscordControllerResponse>(() => {
-            return new DiscordControllerResponse(null, null, true);
+        return new Promise<DiscordControllerResponse>((resolve) => {
+            resolve(new DiscordControllerResponse(null, null, true));
         });
     }
 

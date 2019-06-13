@@ -1,43 +1,86 @@
-import {Client} from 'discord.js';
+import {Client, RichEmbed} from 'discord.js';
 import {DiscordMessage} from "./DTO/DiscordMessage";
 import {DiscordController} from "./Controllers/DiscordController";
 import {ContestService} from "./ContestService";
+import {getClassColor, getMsgAuthorName} from "./Helpers/ChatMessageHelpers";
 
 export class DiscordService {
     private readonly discordClient;
     private readonly token: string;
     private readonly controller: DiscordController;
+    private readonly contestChannel: string;
 
-    constructor(contestService: ContestService, discordClient: Client, token: string) {
+    constructor(contestService: ContestService, discordClient: Client, token: string, contestChannel: string) {
         this.discordClient = discordClient;
         this.token = token;
+        this.contestChannel = contestChannel;
         // It's not injectable, since DiscordService logic is highly couped with DiscordController
         this.controller = new DiscordController(contestService);
+        this.setupHandlers();
     }
 
     private setupHandlers() {
         this.discordClient.on("message", msg => {
-            let parsedMessage = new DiscordMessage(msg.author.id, msg.guild.id, msg.channel.id, msg.content, msg.attachments.first());
+            if (msg.channel.name != this.contestChannel) {
+                return;
+            }
+
+            if (msg.author.bot) {
+                return;
+            }
+
+            let attachements = msg.attachments.map(attach => attach.url);
+
+            let parsedMessage = new DiscordMessage(
+                msg.author.id,
+                msg.guild.id,
+                msg.channel.id,
+                msg.content,
+                attachements
+            );
+
             this.controller
                 .dispatch(parsedMessage)
                 .then(result => {
                     if (result.removeOriginalMessage) {
-                        msg.delete();
+                        msg.delete(1);
                     }
                     if (result.responseMessage) {
                         msg.channel
                             .send(result.responseMessage)
                             // @todo move to setting
-                            .then(m => m.delete(10));
+                            .then(m => m.delete(10000));
                     }
                     if (result.syncMessageData) {
-                        // console.log(result.syncMessageData);
+                        this.syncMessage(msg);
                     }
                 });
         });
     }
 
+    private syncMessage(msg)
+    {
+        const embed = new RichEmbed()
+            .setAuthor(getMsgAuthorName(msg), msg.author.displayAvatarURL)
+            .setDescription(msg.content)
+            .setColor(getClassColor(msg));
+
+        if (msg.attachments.first() !== undefined) {
+            embed.setImage(msg.attachments.first().url);
+        }
+
+        this.discordClient.guilds.forEach(function (guild) {
+            if (guild.id !== msg.guild.id) {
+                const channel = guild.channels.find(x => x.name == msg.channel.name);
+                if (channel !== null) {
+                    channel.send({embed}).catch(r => console.error("Unable to sync message to " + guild.name + ": " + r));
+                }
+            }
+        });
+    };
+
     start() {
-        this.discordClient.login(this.token);
+        this.discordClient
+            .login(this.token);
     }
 }
