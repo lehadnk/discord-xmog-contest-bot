@@ -30,7 +30,7 @@ export class DiscordService {
             }
 
             let imageUrls: string[] = [];
-            msg.attachments.each(attachment => {
+            msg.attachments.forEach(attachment => {
                 if (attachment.url.match(/\.(jpeg|jpg|gif|png)$/) != null) {
                     imageUrls.push(attachment.url);
                 }
