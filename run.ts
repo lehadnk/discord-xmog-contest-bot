@@ -21,12 +21,15 @@ if (existsSync(testDbFile)) {
 
 exec("npm run migrate up");
 
+let contestStartTime = Date.parse(process.env.CONTEST_STARTS_AT);
+let contestEndTime = Date.parse(process.env.CONTEST_ENDS_AT);
+let votingStartTime = Date.parse(process.env.VOTING_STARTS_AT);
+
 let db = new Database('./test-db.db3');
 let adapter = new SqliteDbAdapter(db);
 let participantRepository = new ParticipantRepository(adapter);
 let votesRepository = new VoteRepository(adapter);
-let time = Date.now();
-let contestSettings = new ContestSettings(time - 100000, time + 200000, time - 50000);
+let contestSettings = new ContestSettings(contestStartTime, contestEndTime, votingStartTime);
 let contestService = new ContestService(participantRepository, votesRepository, contestSettings);
 let discordClient = new Client();
 let service = new DiscordService(contestService, discordClient, process.env.DISCORD_BOT_TOKEN, process.env.CONTEST_CHANNEL_NAME);
