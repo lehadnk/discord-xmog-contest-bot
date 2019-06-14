@@ -36,7 +36,7 @@ export class ContestService {
                 .getParticipant(request.participantName, request.participantRealm)
                 .then(participant => {
                     if (participant) {
-                        resolve(new AddParticipantResult(false, 'Вы уже зарегистрирваны в конкурсе'));
+                        resolve(new AddParticipantResult(false, 'Вы уже зарегистрированы в конкурсе'));
                         return;
                     } else {
                         let participant = new Participant(null,
@@ -57,7 +57,7 @@ export class ContestService {
                                     return;
                                 }
 
-                                let msg = reason.code == DatabaseErrorCode.ConstraintViolation ? 'Вы уже учавствуете в конкурсе' : 'Произошла системная ошибка, попробуйте позднее';
+                                let msg = reason.code == DatabaseErrorCode.ConstraintViolation ? 'Вы уже участвуете в конкурсе' : 'Произошла системная ошибка, попробуйте позднее';
                                 resolve(new AddParticipantResult(false, msg));
                             });
                     }
@@ -79,7 +79,7 @@ export class ContestService {
                 .getParticipant(request.characterName, request.characterRealm)
                 .then(participant => {
                     if (participant == null) {
-                        resolve(new VoteForParticipantResult(false, 'Такой персонаж не учавствует в конкурсе. Вы точно правильно указали его имя?'));
+                        resolve(new VoteForParticipantResult(false, 'Такой персонаж не участвует в конкурсе. Вы точно правильно указали его имя?'));
                         return;
                     }
 
