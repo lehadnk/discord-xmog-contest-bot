@@ -29,14 +29,19 @@ export class DiscordService {
                 return;
             }
 
-            let attachements = msg.attachments.map(attach => attach.url);
+            let imageUrls: string[] = [];
+            msg.attachments.each(attachment => {
+                if (attachment.url.match(/\.(jpeg|jpg|gif|png)$/) != null) {
+                    imageUrls.push(attachment.url);
+                }
+            });
 
             let parsedMessage = new DiscordMessage(
                 msg.author.id,
                 msg.guild.id,
                 msg.channel.id,
                 msg.content,
-                attachements
+                imageUrls
             );
 
             this.controller
