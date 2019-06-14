@@ -1,5 +1,4 @@
 import {config as dotenvInit} from 'dotenv';
-import {existsSync, unlinkSync} from "fs";
 import {DiscordService} from "./src/DiscordService";
 import {Database} from "sqlite3";
 import {SqliteDbAdapter} from "./src/SqliteDbAdapter";
@@ -8,18 +7,8 @@ import {VoteRepository} from "./src/Repositories/VoteRepository";
 import {ContestSettings} from "./src/DTO/ContestSettings";
 import {ContestService} from "./src/ContestService";
 import {Client} from "discord.js";
-import {exec} from "child_process";
 
 dotenvInit();
-
-const testDbFile = 'test-db.db3';
-
-if (existsSync(testDbFile)) {
-    unlinkSync(testDbFile);
-    console.log('Test db removed...');
-}
-
-exec("npm run migrate up");
 
 let contestStartTime = Date.parse(process.env.CONTEST_STARTS_AT);
 let contestEndTime = Date.parse(process.env.CONTEST_ENDS_AT);

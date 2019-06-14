@@ -13,7 +13,7 @@ export class AddParticipantMessageValidator {
         // We're removing the command argument first
         let characterFields = chunks[0].split('-');
         if (characterFields.length != 2) {
-            return new ValidatorResult(false, "Пожалуйтса, укажите имя и рилм персонажа первой строкой, через дефис");
+            return new ValidatorResult(false, "Пожалуйста, укажите имя и сервер персонажа первой строкой, через дефис");
         }
 
         let characterName = characterFields[0].trim();
