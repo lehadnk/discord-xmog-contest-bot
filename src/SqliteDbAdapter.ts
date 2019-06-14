@@ -59,7 +59,7 @@ export class SqliteDbAdapter implements IDbAdapter {
         return new Promise<void>((resolve, reject) => {
             this.db.run(sql, placeholders, (err) => {
                 if (err !== null) {
-                    if (err.message.substr(0, 17) == 'SQLITE_CONSTRAINT') {
+                    if (err.message.includes('SQLITE_CONSTRAINT')) {
                         reject(new DatabaseError(DatabaseErrorCode.ConstraintViolation, err.toString()));
                         return;
                     }

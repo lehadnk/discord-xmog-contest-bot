@@ -52,6 +52,7 @@ export class ContestService {
                                 resolve(new AddParticipantResult(true));
                             }).catch(reason => {
                                 if (typeof reason != DatabaseError.name) {
+                                    console.error(reason);
                                     resolve(new AddParticipantResult(false, 'Произошла системная ошибка, попробуйте позднее'));
                                     return;
                                 }
@@ -102,6 +103,7 @@ export class ContestService {
                                     resolve(new VoteForParticipantResult(true));
                                 }).catch(reason => {
                                     if (typeof reason != DatabaseError.name) {
+                                        console.error(reason);
                                         resolve(new VoteForParticipantResult(false, 'Произошла системная ошибка, попробуйте позднее'));
                                         return;
                                     }
