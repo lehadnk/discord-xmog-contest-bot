@@ -8,12 +8,18 @@ import {VoteForParticipantMessageValidator} from "../Validators/VoteForParticipa
 
 export class DiscordController {
     private readonly contestService: ContestService;
+    private readonly contestAnnouncerIds: string[];
 
-    constructor(contestService: ContestService) {
+    constructor(contestService: ContestService, contestAnnouncerIds: string[]) {
+        this.contestAnnouncerIds = contestAnnouncerIds;
         this.contestService = contestService;
     }
 
     dispatch(msg: DiscordMessage): Promise<DiscordControllerResponse> {
+        if (this.contestAnnouncerIds.indexOf(msg.authorId) != -1) {
+            return this.handleAnnounceRequest(msg);
+        }
+
         if (msg.embedImageUrl.length > 0) {
             return this.handleAddParticipantRequest(msg);
         }
@@ -91,6 +97,12 @@ export class DiscordController {
                     // @todo error logging
                     resolve(new DiscordControllerResponse("С ботом происходит что-то очень нехорошее, попробуйте зарегистрироваться позднее :(", null, true))
                 });
+        });
+    }
+
+    private handleAnnounceRequest(msg: DiscordMessage): Promise<DiscordControllerResponse> {
+        return new Promise<DiscordControllerResponse>((resolve) => {
+            resolve(new DiscordControllerResponse(null, msg, false));
         });
     }
 }

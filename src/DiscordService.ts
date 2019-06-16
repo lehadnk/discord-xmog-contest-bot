@@ -9,14 +9,14 @@ export class DiscordService {
     private readonly token: string;
     private readonly controller: DiscordController;
     private readonly contestChannel: string;
-    messageLifeTime: number;
+    private readonly messageLifeTime: number;
 
-    constructor(contestService: ContestService, discordClient: Client, token: string, contestChannel: string) {
+    constructor(contestService: ContestService, controller: DiscordController, discordClient: Client, token: string, contestChannel: string) {
         this.discordClient = discordClient;
         this.token = token;
         this.contestChannel = contestChannel;
         // It's not injectable, since DiscordService logic is highly couped with DiscordController
-        this.controller = new DiscordController(contestService);
+        this.controller = controller;
         this.messageLifeTime = process.env.MESSAGE_LIFE_SPAN != undefined ? parseInt(process.env.MESSAGE_LIFE_SPAN) : 10000;
         this.setupHandlers();
     }

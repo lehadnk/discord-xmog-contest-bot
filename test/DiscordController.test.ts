@@ -15,7 +15,7 @@ let votesRepository = new VoteRepository(adapter);
 let time = Date.now();
 let contestSettings = new ContestSettings(time - 1000, time + 2000, time - 500);
 let contestService = new ContestService(participantRepository, votesRepository, contestSettings);
-let controller = new DiscordController(contestService);
+let controller = new DiscordController(contestService, ['111111111111111111']);
 
 describe('Test DiscordController:', () => {
     it('dispatches a valid add character message to controller', async () => {
@@ -82,5 +82,26 @@ describe('Test DiscordController:', () => {
         expect(result.removeOriginalMessage).to.be.true;
         expect(result.responseMessage).to.be.equal("Пожалуйста, укажите имя и сервер персонажа через дефис");
         expect(result.syncMessageData).to.be.null;
+    });
+
+    it('tests announcer feature', async () => {
+        let msg = new DiscordMessage(
+            '111111111111111111',
+            '512034124935426920',
+            '120359014053436256',
+            'Announce test',
+            ['http://google.com/123.png']
+        );
+        const result = await controller.dispatch(msg);
+
+        expect(result.removeOriginalMessage).to.be.false;
+        expect(result.responseMessage).to.be.null;
+        expect(result.syncMessageData).to.contains({
+            authorId: '111111111111111111',
+            serverId: '512034124935426920',
+            channelId: '120359014053436256',
+            message: 'Announce test',
+        });
+        expect(result.syncMessageData.embedImageUrl[0]).to.be.equal('http://google.com/123.png');
     });
 });
