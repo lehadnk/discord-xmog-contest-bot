@@ -1,4 +1,4 @@
-export function getClassColor(msg) {
+export function getClassColor(msg): string {
     switch(msg.guild.id) {
         case '207912188407578624': // priest
             return '#FFFFFF';
@@ -31,10 +31,18 @@ export function getClassColor(msg) {
     return '#999999'; // undefined
 }
 
-export function getMsgAuthorName(msg) {
+export function getMsgAuthorName(msg): string {
     if (msg.member === 'undefined' || msg.member === null) {
         return msg.author.username;
     }
 
     return msg.member.displayName;
+}
+
+export function normalizeRealmName(name: string): string {
+    return name.trim()
+        .replace('/', '')
+        .replace("'", '')
+        .replace(' ', '')
+        .toLowerCase();
 }

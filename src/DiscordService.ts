@@ -9,6 +9,7 @@ export class DiscordService {
     private readonly token: string;
     private readonly controller: DiscordController;
     private readonly contestChannel: string;
+    messageLifeTime: number;
 
     constructor(contestService: ContestService, discordClient: Client, token: string, contestChannel: string) {
         this.discordClient = discordClient;
@@ -16,6 +17,7 @@ export class DiscordService {
         this.contestChannel = contestChannel;
         // It's not injectable, since DiscordService logic is highly couped with DiscordController
         this.controller = new DiscordController(contestService);
+        this.messageLifeTime = process.env.MESSAGE_LIFE_SPAN != undefined ? parseInt(process.env.MESSAGE_LIFE_SPAN) : 10000;
         this.setupHandlers();
     }
 
@@ -53,8 +55,7 @@ export class DiscordService {
                     if (result.responseMessage) {
                         msg.channel
                             .send(result.responseMessage)
-                            // @todo move to setting
-                            .then(m => m.delete(10000));
+                            .then(m => m.delete(this.messageLifeTime));
                     }
                     if (result.syncMessageData) {
                         this.syncMessage(msg);
@@ -76,7 +77,7 @@ export class DiscordService {
 
         this.discordClient.guilds.forEach(function (guild) {
             if (guild.id !== msg.guild.id) {
-                const channel = guild.channels.find(x => x.name == msg.channel.name);
+                const channel = guild.channels.find(c => c.name == msg.channel.name);
                 if (channel !== null) {
                     channel.send({embed}).catch(r => console.error("Unable to sync message to " + guild.name + ": " + r));
                 }
@@ -86,6 +87,9 @@ export class DiscordService {
 
     start() {
         this.discordClient
-            .login(this.token);
+            .login(this.token)
+            .then(() => {
+                console.info('Bot is up!');
+            })
     }
 }

@@ -19,6 +19,7 @@ exports.up = async function(db) {
     id: { type: 'int', primaryKey: true, autoIncrement: true},
     name: 'string',
     realm: 'string',
+    realmNormalized: 'string',
     imageUrl: 'string',
     discordUserId: 'string',
   });

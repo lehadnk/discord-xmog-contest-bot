@@ -15,6 +15,7 @@ describe('Test Participant Repository', () => {
                 null,
                 'Name',
                 'Realm',
+                'realm',
                 '937535923984239949',
                 'http://google.com/123.jpg')
         );
@@ -35,5 +36,15 @@ describe('Test Participant Repository', () => {
     it('attempts to get non-existing participant from db', async () => {
         let result = await repository.getParticipant('AnotherName', 'Realm');
         expect(result).to.be.equal(null);
+    });
+
+    it('attempts to get participant using realm written in wrong case', async() => {
+        let result = await repository.getParticipant('Name', 'realm');
+        expect(result).to.be.deep.include({
+            name: 'Name',
+            realm: 'Realm',
+            discordUserId: '937535923984239949',
+            imageUrl: 'http://google.com/123.jpg'
+        });
     });
 });

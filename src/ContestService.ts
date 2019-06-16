@@ -8,6 +8,7 @@ import {Vote} from "./Models/Vote";
 import {VoteForParticipantRequest} from "./DTO/Requests/VoteForParticipantRequest";
 import {DatabaseError, DatabaseErrorCode} from "./Exceptions/DatabaseError";
 import {ContestSettings} from "./DTO/ContestSettings";
+import {normalizeRealmName} from "./Helpers/ChatMessageHelpers";
 
 export class ContestService {
     private participantRepository: IParticipantRepository;
@@ -39,9 +40,11 @@ export class ContestService {
                         resolve(new AddParticipantResult(false, 'Вы уже зарегистрированы в конкурсе'));
                         return;
                     } else {
+
                         let participant = new Participant(null,
                             request.participantName,
                             request.participantRealm,
+                            normalizeRealmName(request.participantRealm),
                             request.participantDiscordUserId,
                             request.participantImageUrl
                         );

@@ -11,12 +11,12 @@ describe('Test SqliteDbAdapter', () => {
         expect(result).to.be.undefined;
     });
 
-    it('writes to a table with no placehoders', async () => {
+    it('writes to a table with no placeholders', async () => {
         const result = await adapter.run('INSERT INTO test(title) VALUES ("Title")');
         expect(result).to.be.undefined;
     });
 
-    it('writes to a table with a placehoder', async () => {
+    it('writes to a table with a placeholder', async () => {
         const result = await adapter.run('INSERT INTO test(title) VALUES (?1)', {
             1: 'Another title'
         });
