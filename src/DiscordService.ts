@@ -50,7 +50,9 @@ export class DiscordService {
                 .dispatch(parsedMessage)
                 .then(result => {
                     if (result.removeOriginalMessage) {
-                        msg.delete(1);
+                        msg.delete(1).catch(reason => {
+                            console.error("Unable to delete message in server " + msg.guild.name + ", reason: " + reason);
+                        });
                     }
                     if (result.responseMessage) {
                         msg.channel
