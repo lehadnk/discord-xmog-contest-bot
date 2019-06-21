@@ -6,6 +6,7 @@ describe('Tests VoteForParticipantMessageValidator', () => {
     it('should validate correct message', () => {
         let msg = new DiscordMessage(
             '208939653426839552',
+            'lehadnk',
             '512034124935426920',
             '120359014053436256',
             'Энмеркар - Азурегос',
@@ -18,6 +19,7 @@ describe('Tests VoteForParticipantMessageValidator', () => {
     it('should invalidate empty message', () => {
         let msg = new DiscordMessage(
             '208939653426839552',
+            'lehadnk',
             '512034124935426920',
             '120359014053436256',
             '',
@@ -30,6 +32,7 @@ describe('Tests VoteForParticipantMessageValidator', () => {
     it('should invalidate message with no image', () => {
         let msg = new DiscordMessage(
             '208939653426839552',
+            'lehadnk',
             '512034124935426920',
             '120359014053436256',
             'Энмеркар - Азурегос',
@@ -42,6 +45,7 @@ describe('Tests VoteForParticipantMessageValidator', () => {
     it('should invalidate message with no character name', () => {
         let msg = new DiscordMessage(
             '208939653426839552',
+            'lehadnk',
             '512034124935426920',
             '120359014053436256',
             ' - Азурегос',
@@ -54,6 +58,7 @@ describe('Tests VoteForParticipantMessageValidator', () => {
     it('should invalidate message with no realm mane', () => {
         let msg = new DiscordMessage(
             '208939653426839552',
+            'lehadnk',
             '512034124935426920',
             '120359014053436256',
             'Энмеркар - ',
@@ -66,6 +71,7 @@ describe('Tests VoteForParticipantMessageValidator', () => {
     it('should invalidate malformed message', () => {
         let msg = new DiscordMessage(
             '208939653426839552',
+            'lehadnk',
             '512034124935426920',
             '120359014053436256',
             'Энмеркар азурегосч',
@@ -78,6 +84,7 @@ describe('Tests VoteForParticipantMessageValidator', () => {
     it('should validate message with pass description', () => {
         let msg = new DiscordMessage(
             '208939653426839552',
+            'lehadnk',
             '512034124935426920',
             '120359014053436256',
             'Энмеркар - Азурегос/nMy description',

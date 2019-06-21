@@ -91,7 +91,7 @@ export class ContestService {
                         return;
                     }
 
-                    let vote = new Vote(null, request.voterDiscordId, participant.id);
+                    let vote = new Vote(null, request.voterDiscordId, participant.id, request.voterDiscordName);
                     this.votesRepository
                         .isVoteExists(vote)
                         .then(result => {

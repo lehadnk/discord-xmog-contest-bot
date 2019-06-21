@@ -40,6 +40,7 @@ export class DiscordService {
 
             let parsedMessage = new DiscordMessage(
                 msg.author.id,
+                getMsgAuthorName(msg),
                 msg.guild.id,
                 msg.channel.id,
                 msg.content,

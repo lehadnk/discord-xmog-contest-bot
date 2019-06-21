@@ -21,6 +21,7 @@ describe('Test DiscordController:', () => {
     it('dispatches a valid add character message to controller', async () => {
         let msg = new DiscordMessage(
             '208939653426839552',
+            'lehadnk',
             '512034124935426920',
             '120359014053436256',
             'Селанаар - Азурегос',
@@ -42,6 +43,7 @@ describe('Test DiscordController:', () => {
     it('dispatches a malformed add character message to controller', async () => {
         let msg = new DiscordMessage(
             '208939653426839552',
+            'lehadnk',
             '512034124935426920',
             '120359014053436256',
             'Нейшира',
@@ -57,6 +59,7 @@ describe('Test DiscordController:', () => {
     it('dispatches a valid vote for character message to controller', async () => {
         let msg = new DiscordMessage(
             '943949230493204932',
+            'lehadnk',
             '512034124935426920',
             '120359014053436256',
             '/vote Селанаар - Азурегос',
@@ -72,6 +75,7 @@ describe('Test DiscordController:', () => {
     it('dispatches an invalid vote for character message to controller', async () => {
         let msg = new DiscordMessage(
             '208939653426839552',
+            'lehadnk',
             '512034124935426920',
             '120359014053436256',
             '/vote Селанаар',
@@ -87,6 +91,7 @@ describe('Test DiscordController:', () => {
     it('tests announcer feature', async () => {
         let msg = new DiscordMessage(
             '111111111111111111',
+            'lehadnk',
             '512034124935426920',
             '120359014053436256',
             'Announce test',

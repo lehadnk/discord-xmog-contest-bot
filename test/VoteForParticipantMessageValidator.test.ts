@@ -6,6 +6,7 @@ describe('Tests VoteForParticipantMessageValidator', () => {
     it('should validate correct message', () => {
         let msg = new DiscordMessage(
             '208939653426839552',
+            'lehadnk',
             '512034124935426920',
             '120359014053436256',
             '/vote Селанаар - Азурегос',
@@ -18,6 +19,7 @@ describe('Tests VoteForParticipantMessageValidator', () => {
     it('should invalidate message with no /vote tag', () => {
         let msg = new DiscordMessage(
             '208939653426839552',
+            'lehadnk',
             '512034124935426920',
             '120359014053436256',
             'Селанаар - Азурегос',
@@ -30,6 +32,7 @@ describe('Tests VoteForParticipantMessageValidator', () => {
     it('should invalidate message with no name', () => {
         let msg = new DiscordMessage(
             '208939653426839552',
+            'lehadnk',
             '512034124935426920',
             '120359014053436256',
             '/vote - Азурегос',
@@ -42,6 +45,7 @@ describe('Tests VoteForParticipantMessageValidator', () => {
     it('should invalidate message with no realm', () => {
         let msg = new DiscordMessage(
             '208939653426839552',
+            'lehadnk',
             '512034124935426920',
             '120359014053436256',
             '/vote Селанаар - ',
@@ -54,6 +58,7 @@ describe('Tests VoteForParticipantMessageValidator', () => {
     it('should invalidate message with incorrect character name', () => {
         let msg = new DiscordMessage(
             '208939653426839552',
+            'lehadnk',
             '512034124935426920',
             '120359014053436256',
             '/vote Эн - Азурегос',
@@ -66,6 +71,7 @@ describe('Tests VoteForParticipantMessageValidator', () => {
     it('should invalidate message with incorrect realm name', () => {
         let msg = new DiscordMessage(
             '208939653426839552',
+            'lehadnk',
             '512034124935426920',
             '120359014053436256',
             '/vote Энмеркар - Азу',

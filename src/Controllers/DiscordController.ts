@@ -79,7 +79,8 @@ export class DiscordController {
             let voteForParticipantRequest = new VoteForParticipantRequest(
                 msg.authorId,
                 validationResult.fields.characterName,
-                validationResult.fields.characterRealm
+                validationResult.fields.characterRealm,
+                msg.authorName,
             );
 
             this.contestService

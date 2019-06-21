@@ -61,7 +61,8 @@ describe('Test Participant Repository', () => {
             new VoteForParticipantRequest(
                 '208939653426839552',
                 'Нейшира',
-                'Азурегос'
+                'Азурегос',
+                'lehadnk',
             )
         );
 
@@ -73,7 +74,8 @@ describe('Test Participant Repository', () => {
             new VoteForParticipantRequest(
                 '208939653426839552',
                 'Нейшира',
-                'Азурегос'
+                'Азурегос',
+                'lehadnk',
             )
         );
 
@@ -85,7 +87,8 @@ describe('Test Participant Repository', () => {
             new VoteForParticipantRequest(
                 '203465345326192353',
                 'Нейшира',
-                'Азурегос'
+                'Азурегос',
+                'lehadnk',
             )
         );
 
@@ -130,14 +133,16 @@ describe('Test Participant Repository', () => {
             new VoteForParticipantRequest(
                 '208939653426839552',
                 'Нейши',
-                'Азурегос'
+                'Азурегос',
+                'lehadnk',
             )
         );
         let voteResult2 = contestService.handleVoteForParticipantRequest(
             new VoteForParticipantRequest(
                 '208939653426839552',
                 'Нейши',
-                'Азурегос'
+                'Азурегос',
+                'lehadnk',
             )
         );
 
@@ -151,7 +156,8 @@ describe('Test Participant Repository', () => {
             new VoteForParticipantRequest(
                 '208939653426839552',
                 'Энмеркар',
-                'Азурегос'
+                'Азурегос',
+                'lehadnk',
             )
         );
 
@@ -182,7 +188,8 @@ describe('Test Participant Repository', () => {
             new VoteForParticipantRequest(
                 '326323265432253234',
                 'Нейшира',
-                'Азурегос'
+                'Азурегос',
+                'lehadnk',
             )
         );
 
