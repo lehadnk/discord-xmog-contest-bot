@@ -71,7 +71,7 @@ export class DiscordService {
         const embed = new RichEmbed()
             .setAuthor(getMsgAuthorName(msg), msg.author.displayAvatarURL)
             .setDescription(msg.content)
-            .setColor(getClassColor(msg));
+            .setColor(getClassColor(msg.guild.id));
 
         if (msg.attachments.first() !== undefined) {
             embed.setImage(msg.attachments.first().url);

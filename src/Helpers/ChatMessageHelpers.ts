@@ -1,5 +1,5 @@
-export function getClassColor(msg): string {
-    switch(msg.guild.id) {
+export function getClassColor(guildId: string): string {
+    switch(guildId) {
         case '207912188407578624': // priest
             return '#FFFFFF';
         case '215548192891076610': // dh

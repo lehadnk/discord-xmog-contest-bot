@@ -39,4 +39,18 @@ export class ParticipantRepository implements IParticipantRepository {
             });
         });
     }
+
+    getAllParticipants(): Promise<Participant[]> {
+        return new Promise<Participant[]>(resolve => {
+            this.db.all("SELECT * FROM participants").then(data => {
+                let result = [];
+
+                data.forEach(row => {
+                    result.push(new Participant(row.id, row.name, row.realm, row.realmNormalized, row.discordUserId, row.imageUrl));
+                });
+
+                resolve(data);
+            });
+        });
+    }
 }
