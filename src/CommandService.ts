@@ -2,17 +2,19 @@ import * as commands from "./Commands";
 import {IParticipantRepository} from "./Repositories/IParticipantRepository";
 import {Client} from "discord.js";
 import {ICommand} from "./Commands";
+import {IDbAdapter} from "./IDbAdapter";
 
 export class CommandService {
 
     private commands: Map<string, ICommand>;
 
-    constructor(participantRepository: IParticipantRepository, discordClient: Client) {
+    constructor(participantRepository: IParticipantRepository, discordClient: Client, db: IDbAdapter) {
         this.commands = new Map<string, ICommand>();
         for (let commandsKey in commands) {
             let object = new commands[commandsKey];
             object.participantRepository = participantRepository;
             object.discordClient = discordClient;
+            object.db = db;
             this.commands.set(object.name, object);
         }
     }

@@ -40,9 +40,8 @@ export function getMsgAuthorName(msg): string {
 }
 
 export function normalizeRealmName(name: string): string {
-    return name.trim()
-        .replace('/', '')
-        .replace("'", '')
-        .replace(' ', '')
+    return name
+        .trim()
+        .replace(/[^A-Za-zА-Я-а-я!?]/g,'')
         .toLowerCase();
 }

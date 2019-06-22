@@ -12,7 +12,7 @@ let adapter = new SqliteDbAdapter(db);
 let participantRepository = new ParticipantRepository(adapter);
 let discordClient = new Client();
 
-let commandService = new CommandService(participantRepository, discordClient);
+let commandService = new CommandService(participantRepository, discordClient, adapter);
 
 if (process.argv.length < 3) {
     throw new Error("You should specify the command");
