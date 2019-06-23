@@ -78,6 +78,11 @@ export class ContestService {
                 return;
             }
 
+            if (Date.now() > this.contestSettings.contestEndsAt) {
+                resolve(new VoteForParticipantResult(false, "Конкурс уже окончился. Увидимся в следующем году!"))
+                return;
+            }
+
             this.participantRepository
                 .getParticipant(request.characterName, request.characterRealm)
                 .then(participant => {
