@@ -8,7 +8,8 @@
     "compile": "node_modules/typescript/bin/tsc --listEmittedFiles",
     "migrate": "node_modules/db-migrate/bin/db-migrate",
     "start": "node_modules/.bin/ts-node run.ts",
-    "console": "node_modules/.bin/ts-node console.ts"
+    "console": "node_modules/.bin/ts-node console.ts",
+    "site": "node_modules/.bin/ts-node site.ts"
   },
   "keywords": [
     "typescript",
