@@ -2,7 +2,7 @@ import {default as ICommand} from "./ICommand";
 import AbstractCommand from "./AbstractCommand";
 import {Participant} from "../Models/Participant";
 import {Guild, TextChannel, Message, Collection, RichEmbed} from 'discord.js';
-import {getClassColor, getMsgAuthorName, normalizeRealmName} from "../Helpers/ChatMessageHelpers";
+import {getClassColor, normalizeRealmName} from "../Helpers/ChatMessageHelpers";
 
 export default class SyncParticipantMessages extends AbstractCommand implements ICommand {
     name: string = 'sync-messages';

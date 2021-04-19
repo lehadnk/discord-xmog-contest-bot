@@ -1,8 +1,5 @@
 import {default as ICommand} from "./ICommand";
 import AbstractCommand from "./AbstractCommand";
-import {Participant} from "../Models/Participant";
-import {Guild, TextChannel, Message, Collection, RichEmbed} from 'discord.js';
-import {getClassColor, getMsgAuthorName, normalizeRealmName} from "../Helpers/ChatMessageHelpers";
 
 export default class FindEmptyVoterDiscordNames extends AbstractCommand implements ICommand {
     name: string = 'find-empty-voter-names';

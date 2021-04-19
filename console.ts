@@ -15,7 +15,8 @@ let discordClient = new Client();
 let commandService = new CommandService(participantRepository, discordClient, adapter);
 
 if (process.argv.length < 3) {
-    throw new Error("You should specify the command");
+    console.error("You should specify the command");
+    process.exit(0);
 }
 
 let command = process.argv[2];
