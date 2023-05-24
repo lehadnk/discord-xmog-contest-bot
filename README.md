@@ -34,7 +34,7 @@ CREATE TABLE votes
     participant_id INTEGER REFERENCES participants(id) NOT NULL,
     voter_discord_id VARCHAR NOT NULL,
     voter_discord_name VARCHAR NOT NULL,
-    CONSTRAINT uq_voter_participant UNIQUE (participant_id, id)
+    CONSTRAINT uq_voter_participant UNIQUE (participant_id, voter_discord_id)
 );
 
 ```

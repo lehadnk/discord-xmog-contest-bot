@@ -158,7 +158,7 @@ export default class SiteService {
                 "    participant_id INTEGER REFERENCES participants(id) NOT NULL,\n" +
                 "    voter_discord_id VARCHAR NOT NULL,\n" +
                 "    voter_discord_name VARCHAR NOT NULL,\n" +
-                "    CONSTRAINT uq_voter_participant UNIQUE (participant_id, id)\n" +
+                "    CONSTRAINT uq_voter_participant UNIQUE (participant_id, voter_discord_id)\n" +
                 ");");
         } catch (e) {} finally {}
     }
