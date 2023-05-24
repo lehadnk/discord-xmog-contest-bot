@@ -8,8 +8,9 @@ import {ContestSettings} from "./src/DTO/ContestSettings";
 import {ContestService} from "./src/ContestService";
 import {Client} from "discord.js";
 import {DiscordController} from "./src/Controllers/DiscordController";
+import * as path from 'path';
 
-dotenvInit();
+dotenvInit({path: path.resolve(__dirname, '../.env') });
 
 let announcerIds = JSON.parse(process.env.CONTEST_ANNOUNCER_IDS);
 let contestStartTime = Date.parse(process.env.CONTEST_STARTS_AT);

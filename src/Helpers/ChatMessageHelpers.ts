@@ -1,6 +1,6 @@
 export function getClassColor(guildId: string): string {
     switch(guildId) {
-        case '207912188407578624': // priest
+        case '888098294662848543': // priest
             return '#FFFFFF';
         case '215548192891076610': // dh
             return '#A330C9';
@@ -26,6 +26,8 @@ export function getClassColor(guildId: string): string {
             return '#C79C6E';
         case '217529277489479681': // monk
             return '#00FF96';
+        case '966011436847476736': // dracthyr
+            return '#33937F';
     }
 
     return '#999999'; // undefined
