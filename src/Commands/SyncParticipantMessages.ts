@@ -47,7 +47,7 @@ export default class SyncParticipantMessages extends AbstractCommand implements 
         this.guildChannels.set(guild.id, channel);
 
         let msgBucket = await this.fetchChannelMessages(channel, null);
-        msgBucket = msgBucket.filter(msg => msg.createdAt.getFullYear() == 2019); // these warlocks...
+        msgBucket = msgBucket.filter(msg => msg.createdAt.getFullYear() == 2023); // these warlocks...
 
         return msgBucket;
 
