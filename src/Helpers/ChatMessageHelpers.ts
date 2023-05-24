@@ -27,7 +27,7 @@ export function getClassColor(guildId: string): string {
         case '217529277489479681': // monk
             return '#00FF96';
         case '966011436847476736': // dracthyr
-            return '#';
+            return '#33937F';
     }
 
     return '#999999'; // undefined
