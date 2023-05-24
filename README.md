@@ -15,6 +15,7 @@ SyncParticipantMessages: update year to current year
 ```
 
 # Init SQL (sort of works)
+executed in node build/site.js
 ```sql
 CREATE TABLE participants
 (

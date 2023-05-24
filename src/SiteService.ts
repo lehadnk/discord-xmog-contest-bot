@@ -50,7 +50,9 @@ export default class SiteService {
         res.end();
     }
 
-    start() {
+    async start() {
+        await this.initDb();
+
         createServer(async (req, res) => {
             let urlChunks = req.url.split('/');
             if (urlChunks.length < 2) {
@@ -131,6 +133,33 @@ export default class SiteService {
                     return this.jsonSuccessResponse(res, {});
             }
         }).listen(process.env.API_PORT || 9000);
-        console.log('Listening...');
+
+        console.log('Website API is up, listening...');
+    }
+
+    private async initDb() {
+        try {
+            await this.db.run("CREATE TABLE participants\n" +
+                "(\n" +
+                "    id INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
+                "    name VARCHAR NOT NULL,\n" +
+                "    realm VARCHAR NOT NULL,\n" +
+                "    realmNormalized VARCHAR NOT NULL,\n" +
+                "    imageUrl VARCHAR NOT NULL,\n" +
+                "    discordUserId VARCHAR NOT NULL,\n" +
+                "    CONSTRAINT uq_discordUSerId UNIQUE (discordUserId)\n" +
+                ");");
+        } catch (e) {} finally {}
+
+        try {
+            await this.db.run("CREATE TABLE votes\n" +
+                "(\n" +
+                "    id INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
+                "    participant_id INTEGER REFERENCES participants(id) NOT NULL,\n" +
+                "    voter_discord_id VARCHAR NOT NULL,\n" +
+                "    voter_discord_name VARCHAR NOT NULL,\n" +
+                "    CONSTRAINT uq_voter_participant UNIQUE (participant_id, id)\n" +
+                ");");
+        } catch (e) {} finally {}
     }
 }
