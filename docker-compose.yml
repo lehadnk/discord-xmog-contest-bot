@@ -2,8 +2,11 @@ version: '3.8'
 
 services:
   discord-bot:
-    image: xmog-contest-bot
-    container_name: discord-bot
+    build:
+      context: .
+      dockerfile: Dockerfile
+#    image: xmog-contest-bot
+    container_name: transmog-backend
 
     volumes:
      - ./migrations:/usr/src/app/migrations

@@ -17,21 +17,17 @@ export class DiscordController {
 
     dispatch(msg: DiscordMessage): Promise<DiscordControllerResponse> {
         if (this.contestAnnouncerIds.indexOf(msg.authorId) != -1) {
-            console.info('announcer msg');
             return this.handleAnnounceRequest(msg);
         }
 
         if (msg.embedImageUrl.length > 0) {
-            console.info('participant msg');
             return this.handleAddParticipantRequest(msg);
         }
 
         if (msg.message.substr(0, 5) === '/vote') {
-            console.info('voter msg');
             return this.handleVoteForParticipantRequest(msg);
         }
 
-        console.info('spam msg');
         // Spam message - we're just clearing it
         return new Promise<DiscordControllerResponse>((resolve) => {
             resolve(new DiscordControllerResponse(null, null, true));

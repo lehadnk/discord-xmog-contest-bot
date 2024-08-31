@@ -1,13 +1,13 @@
 # Docker
-prod-db.dist.db3 => prod-db.db3 (password???)
+Copy an empty DB:
 
-`docker build -t xmog-contest-bot .`
+`cp ./prod-db.dist.db3 ./db/prod-db.db3`
 
 Run backend:
 
 `docker-compose down && docker-compose up -d`
 
-DB updates from outside will not be noticed until container restart
+Manual DB updates are not synced to container until restart
 
 # Installation (old)
 ```
