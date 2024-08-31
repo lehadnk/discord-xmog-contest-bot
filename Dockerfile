@@ -1,5 +1,5 @@
 #for linux - attempts
-FROM node:21.7.1-bullseye
+FROM node:18-bullseye
 RUN apt-get update && apt-get install -y supervisor
 
 RUN apt-get update && apt-get install -y \
