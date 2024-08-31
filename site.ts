@@ -5,7 +5,7 @@ import SiteService from "./src/SiteService";
 
 dotenvInit();
 
-let db = new Database('./prod-db.db3');
+let db = new Database('./db/prod-db.db3');
 let adapter = new SqliteDbAdapter(db);
 let siteService = new SiteService(adapter);
 
