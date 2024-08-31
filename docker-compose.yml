@@ -5,7 +5,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-#    image: xmog-contest-bot
     container_name: transmog-backend
 
     volumes:
@@ -29,14 +28,6 @@ services:
 
     ports:
       - "9000:9000"
-
-#    build: .
-#    develop:
-#      watch:
-#        - action: sync
-#          path: ./db/
-#          target: /usr/src/app/db/
-
 
 volumes:
   discord-bot-node-modules:
