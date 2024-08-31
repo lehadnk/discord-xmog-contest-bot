@@ -8,6 +8,6 @@
 
   "prod": {
     "driver": "sqlite3",
-    "filename": "./prod-db.db3"
+    "filename": "./db/prod-db.db3"
   }
 }

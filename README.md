@@ -1,4 +1,15 @@
-# Installation
+# Docker
+prod-db.dist.db3 => prod-db.db3 (password???)
+
+`docker build -t xmog-contest-bot .`
+
+Run backend:
+
+`docker-compose down && docker-compose up -d`
+
+DB updates from outside will not be noticed until container restart
+
+# Installation (old)
 ```
 node: 12.14.1
 (npm: 6.13.4)

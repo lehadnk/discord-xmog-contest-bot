@@ -17,7 +17,7 @@ let contestStartTime = Date.parse(process.env.CONTEST_STARTS_AT);
 let contestEndTime = Date.parse(process.env.CONTEST_ENDS_AT);
 let votingStartTime = Date.parse(process.env.VOTING_STARTS_AT);
 
-let db = new Database('./prod-db.db3');
+let db = new Database('./db/prod-db.db3');
 let adapter = new SqliteDbAdapter(db);
 let participantRepository = new ParticipantRepository(adapter);
 let votesRepository = new VoteRepository(adapter);
