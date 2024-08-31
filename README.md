@@ -1,7 +1,7 @@
 # Docker
 Copy an empty DB (not the most convenient way though):
 
-`cp ./prod-db.dist.db3 ./db/prod-db.db3`
+`mkdir db && cp prod-db.dist.db3 db/prod-db.db3`
 
 .env.example => .env
 
