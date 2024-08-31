@@ -1,5 +1,5 @@
 # Docker
-Copy an empty DB:
+Copy an empty DB (not the most convenient way though):
 
 `cp ./prod-db.dist.db3 ./db/prod-db.db3`
 
@@ -13,6 +13,7 @@ Manual DB updates are not synced to container until restart
 ```
 node: 12.14.1
 (npm: 6.13.4)
+(upd - had issues with this version, node 21.7.1 worked fine)
 
 npm install
 npm run compile
