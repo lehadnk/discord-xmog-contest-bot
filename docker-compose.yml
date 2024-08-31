@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: transmog-backend
+    container_name: xmog-backend
 
     volumes:
      - ./migrations:/usr/src/app/migrations
