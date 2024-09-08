@@ -5,6 +5,8 @@ Run backend:
 
 `docker-compose down && docker-compose up -d`
 
+Database will be automatically created on startup as /db/prod-db.db3
+
 Manual DB updates are not synced to container until restart
 
 voter_created_at field is needed to track voter user creation date.
@@ -12,6 +14,14 @@ observable by smth like this:
 ```
 SELECT *, DATETIME(ROUND(voter_created_at / 1000), 'unixepoch') AS voter_created FROM votes
 ```
+
+# Debug
+modify DB path `./db/prod-db.db3` to `../db/prod-db.db3` in run.ts or site.ts
+
+`npm run compile`
+
+then run with debug build/run.js or build/site.js
+
 
 # Installation (old)
 ```
