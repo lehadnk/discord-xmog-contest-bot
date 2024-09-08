@@ -1,16 +1,18 @@
 import {expect} from "chai";
 import {DiscordMessage} from "../src/DTO/DiscordMessage";
 import {AddParticipantMessageValidator} from "../src/Validators/AddParticipantMessageValidator";
+import {DiscordAttachment} from "../src/DTO/DiscordAttachment";
 
 describe('Tests VoteForParticipantMessageValidator', () => {
     it('should validate correct message', () => {
         let msg = new DiscordMessage(
             '208939653426839552',
+            '',
             'lehadnk',
             '512034124935426920',
             '120359014053436256',
             'Энмеркар - Азурегос',
-            ['http://google.com/123.jpg']
+            [new DiscordAttachment('http://google.com/123.jpg', 123)]
         );
         let result = AddParticipantMessageValidator.validate(msg);
         expect(result.isValid).to.be.true;
@@ -19,11 +21,12 @@ describe('Tests VoteForParticipantMessageValidator', () => {
     it('should invalidate empty message', () => {
         let msg = new DiscordMessage(
             '208939653426839552',
+            '',
             'lehadnk',
             '512034124935426920',
             '120359014053436256',
             '',
-            ['http://google.com/123.jpg']
+            [new DiscordAttachment('http://google.com/123.jpg', 123)]
         );
         let result = AddParticipantMessageValidator.validate(msg);
         expect(result.isValid).to.be.false;
@@ -32,6 +35,7 @@ describe('Tests VoteForParticipantMessageValidator', () => {
     it('should invalidate message with no image', () => {
         let msg = new DiscordMessage(
             '208939653426839552',
+            '',
             'lehadnk',
             '512034124935426920',
             '120359014053436256',
@@ -45,11 +49,12 @@ describe('Tests VoteForParticipantMessageValidator', () => {
     it('should invalidate message with no character name', () => {
         let msg = new DiscordMessage(
             '208939653426839552',
+            '',
             'lehadnk',
             '512034124935426920',
             '120359014053436256',
             ' - Азурегос',
-            ['http://google.com/123.jpg']
+            [new DiscordAttachment('http://google.com/123.jpg', 123)]
         );
         let result = AddParticipantMessageValidator.validate(msg);
         expect(result.isValid).to.be.false;
@@ -58,11 +63,12 @@ describe('Tests VoteForParticipantMessageValidator', () => {
     it('should invalidate message with no realm mane', () => {
         let msg = new DiscordMessage(
             '208939653426839552',
+            '',
             'lehadnk',
             '512034124935426920',
             '120359014053436256',
             'Энмеркар - ',
-            ['http://google.com/123.jpg']
+            [new DiscordAttachment('http://google.com/123.jpg', 123)]
         );
         let result = AddParticipantMessageValidator.validate(msg);
         expect(result.isValid).to.be.false;
@@ -71,11 +77,12 @@ describe('Tests VoteForParticipantMessageValidator', () => {
     it('should invalidate malformed message', () => {
         let msg = new DiscordMessage(
             '208939653426839552',
+            '',
             'lehadnk',
             '512034124935426920',
             '120359014053436256',
             'Энмеркар азурегосч',
-            ['http://google.com/123.jpg']
+            [new DiscordAttachment('http://google.com/123.jpg', 123)]
         );
         let result = AddParticipantMessageValidator.validate(msg);
         expect(result.isValid).to.be.false;
@@ -84,11 +91,12 @@ describe('Tests VoteForParticipantMessageValidator', () => {
     it('should validate message with pass description', () => {
         let msg = new DiscordMessage(
             '208939653426839552',
+            '',
             'lehadnk',
             '512034124935426920',
             '120359014053436256',
             'Энмеркар - Азурегос/nMy description',
-            ['http://google.com/123.jpg']
+            [new DiscordAttachment('http://google.com/123.jpg', 123)]
         );
         let result = AddParticipantMessageValidator.validate(msg);
         expect(result.isValid).to.be.true;

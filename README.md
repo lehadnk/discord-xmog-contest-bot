@@ -1,8 +1,4 @@
 # Docker
-Copy an empty DB (not the most convenient way though):
-
-`mkdir db && cp prod-db.dist.db3 db/prod-db.db3`
-
 .env.example => .env
 
 Run backend:
@@ -10,6 +6,12 @@ Run backend:
 `docker-compose down && docker-compose up -d`
 
 Manual DB updates are not synced to container until restart
+
+voter_created_at field is needed to track voter user creation date.
+observable by smth like this: 
+```
+SELECT *, DATETIME(ROUND(voter_created_at / 1000), 'unixepoch') AS voter_created FROM votes
+```
 
 # Installation (old)
 ```
@@ -56,3 +58,7 @@ CREATE TABLE votes
 # Urls
 Participants API endpoint: http://localhost:9000/participants
 (there are few more)
+
+# Tests
+`npm run test`
+DB-related tests are failing, not sure how to fix. Migrations do not work and prod db is initialized directly from the code.

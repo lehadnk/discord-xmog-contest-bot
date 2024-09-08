@@ -8,7 +8,7 @@ import {AddParticipantRequest} from "../src/DTO/Requests/AddParticipantRequest";
 import {VoteForParticipantRequest} from "../src/DTO/Requests/VoteForParticipantRequest";
 import {ContestSettings} from "../src/DTO/ContestSettings";
 
-let db = new Database('./test-db.db3');
+let db = new Database('./db/test-db.db3');
 let adapter = new SqliteDbAdapter(db);
 let participantRepository = new ParticipantRepository(adapter);
 let votesRepository = new VoteRepository(adapter);
@@ -63,6 +63,7 @@ describe('Test Participant Repository', () => {
                 'Нейшира',
                 'Азурегос',
                 'lehadnk',
+                '',
             )
         );
 
@@ -76,6 +77,7 @@ describe('Test Participant Repository', () => {
                 'Нейшира',
                 'Азурегос',
                 'lehadnk',
+                '',
             )
         );
 
@@ -89,6 +91,7 @@ describe('Test Participant Repository', () => {
                 'Нейшира',
                 'Азурегос',
                 'lehadnk',
+                '',
             )
         );
 
@@ -135,6 +138,7 @@ describe('Test Participant Repository', () => {
                 'Нейши',
                 'Азурегос',
                 'lehadnk',
+                '',
             )
         );
         let voteResult2 = contestService.handleVoteForParticipantRequest(
@@ -143,6 +147,7 @@ describe('Test Participant Repository', () => {
                 'Нейши',
                 'Азурегос',
                 'lehadnk',
+                '',
             )
         );
 
@@ -158,6 +163,7 @@ describe('Test Participant Repository', () => {
                 'Энмеркар',
                 'Азурегос',
                 'lehadnk',
+                '',
             )
         );
 
@@ -190,6 +196,7 @@ describe('Test Participant Repository', () => {
                 'Нейшира',
                 'Азурегос',
                 'lehadnk',
+                '',
             )
         );
 

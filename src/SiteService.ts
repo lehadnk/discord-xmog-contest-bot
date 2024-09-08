@@ -59,7 +59,7 @@ export default class SiteService {
                 return this.notFoundError(res);
             }
 
-            let result: object;
+            let result: any;
             switch(urlChunks[1]) {
                 case 'participants':
                     result = await this.db
@@ -91,9 +91,19 @@ export default class SiteService {
                             "GROUP BY p.name, p.realm\n" +
                             "ORDER BY votes DESC");
 
+                    if (process.env.IS_VOTES_PUBLIC !== 'true') {
+                        result.forEach(resultItem => {
+                            resultItem['votes'] = null;
+                        })
+                    }
+
                     return this.jsonSuccessResponse(res, result);
                 case 'participant':
                     if (urlChunks.length < 3) {
+                        return this.badRequestError(res);
+                    }
+
+                    if (process.env.IS_VOTES_PUBLIC !== 'true') {
                         return this.badRequestError(res);
                     }
 
@@ -158,6 +168,7 @@ export default class SiteService {
                 "    participant_id INTEGER REFERENCES participants(id) NOT NULL,\n" +
                 "    voter_discord_id VARCHAR NOT NULL,\n" +
                 "    voter_discord_name VARCHAR NOT NULL,\n" +
+                "    voter_created_at VARCHAR NOT NULL,\n" +
                 "    CONSTRAINT uq_voter_participant UNIQUE (participant_id, voter_discord_id)\n" +
                 ");");
         } catch (e) {} finally {}

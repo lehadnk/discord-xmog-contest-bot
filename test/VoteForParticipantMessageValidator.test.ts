@@ -1,16 +1,18 @@
 import {expect} from "chai";
 import {VoteForParticipantMessageValidator} from "../src/Validators/VoteForParticipantMessageValidator";
 import {DiscordMessage} from "../src/DTO/DiscordMessage";
+import {DiscordAttachment} from "../src/DTO/DiscordAttachment";
 
 describe('Tests VoteForParticipantMessageValidator', () => {
     it('should validate correct message', () => {
         let msg = new DiscordMessage(
             '208939653426839552',
+            '',
             'lehadnk',
             '512034124935426920',
             '120359014053436256',
             '/vote Селанаар - Азурегос',
-            []
+            [new DiscordAttachment('http://google.com/123.jpg', 123)]
         );
         let result = VoteForParticipantMessageValidator.validate(msg);
         expect(result.isValid).to.be.true;
@@ -19,6 +21,7 @@ describe('Tests VoteForParticipantMessageValidator', () => {
     it('should invalidate message with no /vote tag', () => {
         let msg = new DiscordMessage(
             '208939653426839552',
+            '',
             'lehadnk',
             '512034124935426920',
             '120359014053436256',
@@ -32,6 +35,7 @@ describe('Tests VoteForParticipantMessageValidator', () => {
     it('should invalidate message with no name', () => {
         let msg = new DiscordMessage(
             '208939653426839552',
+            '',
             'lehadnk',
             '512034124935426920',
             '120359014053436256',
@@ -45,6 +49,7 @@ describe('Tests VoteForParticipantMessageValidator', () => {
     it('should invalidate message with no realm', () => {
         let msg = new DiscordMessage(
             '208939653426839552',
+            '',
             'lehadnk',
             '512034124935426920',
             '120359014053436256',
@@ -58,6 +63,7 @@ describe('Tests VoteForParticipantMessageValidator', () => {
     it('should invalidate message with incorrect character name', () => {
         let msg = new DiscordMessage(
             '208939653426839552',
+            '',
             'lehadnk',
             '512034124935426920',
             '120359014053436256',
@@ -71,6 +77,7 @@ describe('Tests VoteForParticipantMessageValidator', () => {
     it('should invalidate message with incorrect realm name', () => {
         let msg = new DiscordMessage(
             '208939653426839552',
+            '',
             'lehadnk',
             '512034124935426920',
             '120359014053436256',

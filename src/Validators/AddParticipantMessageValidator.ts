@@ -35,18 +35,23 @@ export class AddParticipantMessageValidator {
             return new ValidatorResult(false, "Пожалуйста, введите корректное название рилма");
         }
 
-        if (msg.embedImageUrl.length == 0) {
+        if (msg.attachedImages.length == 0) {
             return new ValidatorResult(false, "Вы должны добавить одно изображение к сообщению");
         }
 
-        if (msg.embedImageUrl.length > 1) {
+        if (msg.attachedImages.length > 1) {
             return new ValidatorResult(false, "Вы можете добавить не более одного изображения к сообщению");
+        }
+
+        let imageToShow = msg.attachedImages[0];
+        if (imageToShow.filesizeBytes > Number(process.env.MAX_IMAGE_SIZE_MB) * 1024 * 1024) {
+            return new ValidatorResult(false, `Размер изображения должен быть не более ${process.env.MAX_IMAGE_SIZE_MB} мегабайт`);
         }
 
         return new ValidatorResult(true, null, {
             characterName,
             characterRealm,
-            embedImageUrl: msg.embedImageUrl[0],
+            embedImageUrl: imageToShow.imageUrl,
             authorDiscordId: msg.authorId,
         });
     }

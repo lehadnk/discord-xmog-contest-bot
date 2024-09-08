@@ -9,6 +9,7 @@ import {ContestService} from "./src/ContestService";
 import {Client} from "discord.js";
 import {DiscordController} from "./src/Controllers/DiscordController";
 import * as path from 'path';
+import {ImgurService} from "./src/Imgur/ImgurService";
 
 dotenvInit({path: path.resolve(__dirname, '../.env') });
 
@@ -23,7 +24,8 @@ let participantRepository = new ParticipantRepository(adapter);
 let votesRepository = new VoteRepository(adapter);
 let contestSettings = new ContestSettings(contestStartTime, contestEndTime, votingStartTime);
 let contestService = new ContestService(participantRepository, votesRepository, contestSettings);
-let discordController = new DiscordController(contestService, announcerIds);
+let imgurService = new ImgurService();
+let discordController = new DiscordController(contestService, announcerIds, imgurService);
 let discordClient = new Client();
 let service = new DiscordService(
     contestService,

@@ -4,7 +4,7 @@ import {SqliteDbAdapter} from "../src/SqliteDbAdapter";
 import {Participant} from "../src/Models/Participant";
 import {ParticipantRepository} from "../src/Repositories/ParticipantRepository";
 
-let db = new Database('./test-db.db3');
+let db = new Database('./db/test-db.db3');
 let adapter = new SqliteDbAdapter(db);
 let repository = new ParticipantRepository(adapter);
 

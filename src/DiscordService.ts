@@ -3,6 +3,7 @@ import {DiscordMessage} from "./DTO/DiscordMessage";
 import {DiscordController} from "./Controllers/DiscordController";
 import {ContestService} from "./ContestService";
 import {getClassColor, getMsgAuthorName} from "./Helpers/ChatMessageHelpers";
+import {DiscordAttachment} from "./DTO/DiscordAttachment";
 
 export class DiscordService {
     private readonly discordClient;
@@ -31,20 +32,21 @@ export class DiscordService {
                 return;
             }
 
-            let imageUrls: string[] = [];
+            let attachedImages: DiscordAttachment[] = [];
             msg.attachments.forEach(attachment => {
                 if (attachment.filename.match(/\.(jpeg|jpg|gif|png)$/) != null) {
-                    imageUrls.push(attachment.url);
+                    attachedImages.push(new DiscordAttachment(attachment.url, attachment.filesize));
                 }
             });
 
             let parsedMessage = new DiscordMessage(
                 msg.author.id,
+                msg.author.createdAt,
                 getMsgAuthorName(msg),
                 msg.guild.id,
                 msg.channel.id,
                 msg.content,
-                imageUrls
+                attachedImages
             );
 
             this.controller

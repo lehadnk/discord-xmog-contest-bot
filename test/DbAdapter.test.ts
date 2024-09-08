@@ -2,7 +2,7 @@ import {expect} from "chai";
 import {Database} from "sqlite3";
 import {SqliteDbAdapter} from "../src/SqliteDbAdapter";
 
-let db = new Database('./test-db.db3');
+let db = new Database('./db/test-db.db3');
 let adapter = new SqliteDbAdapter(db);
 
 describe('Test SqliteDbAdapter', () => {

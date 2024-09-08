@@ -5,14 +5,17 @@ import {DiscordControllerResponse} from "../DTO/DiscordControllerResponse";
 import {VoteForParticipantRequest} from "../DTO/Requests/VoteForParticipantRequest";
 import {AddParticipantMessageValidator} from "../Validators/AddParticipantMessageValidator";
 import {VoteForParticipantMessageValidator} from "../Validators/VoteForParticipantMessageValidator";
+import {ImgurService} from "../Imgur/ImgurService";
 
 export class DiscordController {
     private readonly contestService: ContestService;
     private readonly contestAnnouncerIds: string[];
+    private readonly imgurService: ImgurService;
 
-    constructor(contestService: ContestService, contestAnnouncerIds: string[]) {
+    constructor(contestService: ContestService, contestAnnouncerIds: string[], imgurService: ImgurService) {
         this.contestAnnouncerIds = contestAnnouncerIds;
         this.contestService = contestService;
+        this.imgurService = imgurService;
     }
 
     dispatch(msg: DiscordMessage): Promise<DiscordControllerResponse> {
@@ -20,7 +23,7 @@ export class DiscordController {
             return this.handleAnnounceRequest(msg);
         }
 
-        if (msg.embedImageUrl.length > 0) {
+        if (msg.attachedImages.length > 0) {
             return this.handleAddParticipantRequest(msg);
         }
 
@@ -43,27 +46,30 @@ export class DiscordController {
                 return;
             }
 
-            let addParticipantRequest = new AddParticipantRequest(
-                validationResult.fields.characterName,
-                validationResult.fields.characterRealm,
-                validationResult.fields.embedImageUrl,
-                validationResult.fields.authorDiscordId,
-            );
+            let imagePermalinkPromise = this.imgurService.uploadImageToImgur(validationResult.fields.embedImageUrl);
+            imagePermalinkPromise.then((imagePermalink) => {
+                let addParticipantRequest = new AddParticipantRequest(
+                    validationResult.fields.characterName,
+                    validationResult.fields.characterRealm,
+                    imagePermalink || validationResult.fields.embedImageUrl,
+                    validationResult.fields.authorDiscordId,
+                );
 
-            this.contestService
-                .handleAddParticipantRequest(addParticipantRequest)
-                .then(result => {
-                    if (result.isSuccess) {
-                        resolve(new DiscordControllerResponse(null, msg, false));
-                        return;
-                    }
+                this.contestService
+                    .handleAddParticipantRequest(addParticipantRequest)
+                    .then(result => {
+                        if (result.isSuccess) {
+                            resolve(new DiscordControllerResponse(null, msg, false));
+                            return;
+                        }
 
-                    resolve(new DiscordControllerResponse(result.messageResponse, null, true));
-                })
-                .catch(reason => {
-                    // @todo error logging
-                    resolve(new DiscordControllerResponse("С ботом происходит что-то очень нехорошее, попробуйте зарегистрироваться позднее :(", null, true))
-                });
+                        resolve(new DiscordControllerResponse(result.messageResponse, null, true));
+                    })
+                    .catch(reason => {
+                        // @todo error logging
+                        resolve(new DiscordControllerResponse("С ботом происходит что-то очень нехорошее, попробуйте зарегистрироваться позднее :(", null, true))
+                    });
+            })
         });
     }
 
@@ -81,6 +87,7 @@ export class DiscordController {
                 validationResult.fields.characterName,
                 validationResult.fields.characterRealm,
                 msg.authorName,
+                msg.authorCreatedAt
             );
 
             this.contestService

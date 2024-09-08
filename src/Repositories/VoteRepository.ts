@@ -13,11 +13,12 @@ export class VoteRepository implements IVoteRepository {
     addVote(vote: Vote): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this.db.run(
-                "INSERT INTO votes(participant_id, voter_discord_id, voter_discord_name) VALUES (?1, ?2, ?3);",
+                "INSERT INTO votes(participant_id, voter_discord_id, voter_discord_name, voter_created_at) VALUES (?1, ?2, ?3, ?4);",
                 {
                     1: vote.participantId,
                     2: vote.voterDiscordId,
                     3: vote.voterDiscordName,
+                    4: vote.voterCreatedAt
                 }
             ).then(result => {
                 resolve();

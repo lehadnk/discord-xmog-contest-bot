@@ -1,7 +1,7 @@
 import {unlinkSync, existsSync} from 'fs';
 import {exec} from 'child_process';
 
-const testDbFile = 'test-db.db3';
+const testDbFile = './db/test-db.db3';
 
 if (existsSync(testDbFile)) {
     unlinkSync(testDbFile);
