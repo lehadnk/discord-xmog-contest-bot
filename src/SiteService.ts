@@ -158,7 +158,7 @@ export default class SiteService {
                 "    realmNormalized VARCHAR NOT NULL,\n" +
                 "    imageUrl VARCHAR NOT NULL,\n" +
                 "    discordUserId VARCHAR NOT NULL,\n" +
-                "    isBanned BOOLEAN NOT NULL DEFAULT(FALSE),\n" +
+                "    isBanned BOOLEAN NOT NULL DEFAULT(0),\n" +
                 "    CONSTRAINT uq_discordUSerId UNIQUE (discordUserId)\n" +
                 ");");
         } catch (e) {} finally {}
