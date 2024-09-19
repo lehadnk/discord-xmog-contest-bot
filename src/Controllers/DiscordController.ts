@@ -53,6 +53,7 @@ export class DiscordController {
                     validationResult.fields.characterRealm,
                     imagePermalink || validationResult.fields.embedImageUrl,
                     validationResult.fields.authorDiscordId,
+                    msg.authorCreatedAt
                 );
 
                 this.contestService

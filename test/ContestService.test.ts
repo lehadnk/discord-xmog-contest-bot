@@ -24,6 +24,7 @@ describe('Test Participant Repository', () => {
                 'Азурегос',
                 'http://google.com/123.jpg',
                 '203465345326192353',
+                Date.parse("2024-09-01").valueOf().toString()
             )
         );
 
@@ -37,6 +38,7 @@ describe('Test Participant Repository', () => {
                 'Азурегос',
                 'http://google.com/123.jpg',
                 '138623940202949514',
+                Date.parse("2024-09-01").valueOf().toString()
             )
         );
 
@@ -50,6 +52,7 @@ describe('Test Participant Repository', () => {
                 'Азурегос',
                 'http://google.com/123.jpg',
                 '203465345326192353',
+                Date.parse("2024-09-01").valueOf().toString()
             )
         );
 
@@ -104,7 +107,8 @@ describe('Test Participant Repository', () => {
                 'Таллиссия',
                 'Азурегос',
                 'http://google.com/123.jpg',
-                '320553294329843929'
+                '320553294329843929',
+                Date.parse("2024-09-01").valueOf().toString(),
             )
         );
 
@@ -113,7 +117,8 @@ describe('Test Participant Repository', () => {
                 'Таллиссия',
                 'Азурегос',
                 'http://google.com/123.jpg',
-                '320553294329843929'
+                '320553294329843929',
+                Date.parse("2024-09-01").valueOf().toString(),
             )
         );
 
@@ -128,7 +133,8 @@ describe('Test Participant Repository', () => {
                 'Нейши',
                 'Азурегос',
                 'http://google.com/123.jpg',
-                '950191302893824532'
+                '950191302893824532',
+                Date.parse("2024-09-01").valueOf().toString(),
             )
         );
 
@@ -179,7 +185,8 @@ describe('Test Participant Repository', () => {
                 'Вульфер',
                 'Азурегос',
                 'http://google.com/123.jpg',
-                '943428493289250329'
+                '943428493289250329',
+                Date.parse("2024-09-01").valueOf().toString(),
             )
         );
 

@@ -88,6 +88,7 @@ export default class SiteService {
                             "    )\n" +
                             "    GROUP BY participant_id\n" +
                             ") as wv ON p.id = wv.participant_id\n" +
+                            "WHERE p.isBanned = FALSE\n" +
                             "GROUP BY p.name, p.realm\n" +
                             "ORDER BY votes DESC");
 
@@ -157,6 +158,7 @@ export default class SiteService {
                 "    realmNormalized VARCHAR NOT NULL,\n" +
                 "    imageUrl VARCHAR NOT NULL,\n" +
                 "    discordUserId VARCHAR NOT NULL,\n" +
+                "    isBanned BOOLEAN NOT NULL DEFAULT(FALSE),\n" +
                 "    CONSTRAINT uq_discordUSerId UNIQUE (discordUserId)\n" +
                 ");");
         } catch (e) {} finally {}

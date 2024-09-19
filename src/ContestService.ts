@@ -23,6 +23,12 @@ export class ContestService {
 
     handleAddParticipantRequest(request: AddParticipantRequest): Promise<AddParticipantResult> {
         return new Promise<AddParticipantResult>(resolve => {
+            let regDate = Date.parse(request.participantDiscordCreatedAt)
+            if (regDate.valueOf() > this.contestSettings.contestStartsAt) {
+                resolve(new AddParticipantResult(false, "Пожалуйста, обратитесь к администраторам конкурса для добавления заявки"));
+                return;
+            }
+
             if (Date.now() < this.contestSettings.contestStartsAt) {
                 resolve(new AddParticipantResult(false, "Прием заявок на конкурс еще не начался"));
                 return;
