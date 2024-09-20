@@ -1,7 +1,7 @@
 import {default as ICommand} from "./ICommand";
 import AbstractCommand from "./AbstractCommand";
 import {Participant} from "../Models/Participant";
-import {Guild, TextChannel, Message, Collection, RichEmbed} from 'discord.js';
+import {Guild, TextChannel, Message, Collection, MessageEmbed} from 'discord.js';
 import {getClassColor, normalizeRealmName} from "../Helpers/ChatMessageHelpers";
 
 export default class SyncParticipantMessages extends AbstractCommand implements ICommand {
@@ -39,7 +39,8 @@ export default class SyncParticipantMessages extends AbstractCommand implements 
     private async fetchServerMessages(guild: Guild): Promise<Collection<string, Message>> {
         let channel: TextChannel;
         // @ts-ignore
-        channel = guild.channels.find(c => c.name == process.env.CONTEST_CHANNEL_NAME && c.type == 'text');
+        const channels = guild.channels.cache;
+        channel = guild.channels.cache.find(c => c.name == process.env.CONTEST_CHANNEL_NAME && c.type == 'text');
         if (!channel) {
             return;
         }
@@ -104,7 +105,7 @@ export default class SyncParticipantMessages extends AbstractCommand implements 
         }
         let channel = this.guildChannels.get(guildId);
 
-        const embed = new RichEmbed()
+        const embed = new MessageEmbed()
             .setDescription(participant.name + ' - ' + participant.realm)
             .setColor(getClassColor(guildId));
         embed.setImage(participant.imageUrl);

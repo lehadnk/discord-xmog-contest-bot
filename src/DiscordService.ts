@@ -1,4 +1,4 @@
-import {Client, RichEmbed} from 'discord.js';
+import {Client, MessageEmbed} from 'discord.js';
 import {DiscordMessage} from "./DTO/DiscordMessage";
 import {DiscordController} from "./Controllers/DiscordController";
 import {ContestService} from "./ContestService";
@@ -34,7 +34,7 @@ export class DiscordService {
 
             let attachedImages: DiscordAttachment[] = [];
             msg.attachments.forEach(attachment => {
-                if (attachment.filename.match(/\.(jpeg|jpg|gif|png)$/) != null) {
+                if (attachment.name.match(/\.(jpeg|jpg|gif|png)$/) != null) {
                     attachedImages.push(new DiscordAttachment(attachment.url, attachment.filesize));
                 }
             });
@@ -53,14 +53,14 @@ export class DiscordService {
                 .dispatch(parsedMessage)
                 .then(result => {
                     if (result.removeOriginalMessage) {
-                        msg.delete(1).catch(reason => {
+                        msg.delete().catch(reason => {
                             console.error("Unable to delete message in server " + msg.guild.name + ", reason: " + reason);
                         });
                     }
                     if (result.responseMessage) {
                         msg.channel
                             .send(result.responseMessage)
-                            .then(m => m.delete(this.messageLifeTime));
+                            .then(m => m.delete({ timeout: this.messageLifeTime }));
                     }
                     if (result.syncMessageData) {
                         this.syncMessage(msg);
@@ -71,7 +71,7 @@ export class DiscordService {
 
     private syncMessage(msg)
     {
-        const embed = new RichEmbed()
+        const embed = new MessageEmbed()
             .setAuthor(getMsgAuthorName(msg), msg.author.displayAvatarURL)
             .setDescription(msg.content)
             .setColor(getClassColor(msg.guild.id));
@@ -80,9 +80,10 @@ export class DiscordService {
             embed.setImage(msg.attachments.first().url);
         }
 
-        this.discordClient.guilds.forEach(function (guild) {
+        this.discordClient.guilds.cache.forEach(function (guild) {
             if (guild.id !== msg.guild.id) {
-                const channel = guild.channels.find(c => c.name == msg.channel.name);
+                const channels = guild.channels.cache
+                const channel = channels.find(c => c.name == msg.channel.name);
                 if (channel !== null) {
                     channel.send({embed}).catch(r => console.error("Unable to sync message to " + guild.name + ": " + r));
                 }
