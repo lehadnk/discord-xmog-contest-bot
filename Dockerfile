@@ -15,7 +15,4 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /usr/src/app
 
-RUN npm install
-RUN npm run compile
-
 CMD ["/usr/src/app/start.sh"]
