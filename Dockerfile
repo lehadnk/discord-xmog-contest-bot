@@ -15,4 +15,4 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /usr/src/app
 
-CMD ["/usr/src/app/start.sh"]
+CMD ["/bin/bash", "/usr/src/app/start.sh"]
