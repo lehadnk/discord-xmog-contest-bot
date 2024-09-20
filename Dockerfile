@@ -14,4 +14,8 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /usr/src/app
-CMD ["npm install && npm run compile && /usr/bin/supervisord"]
+
+RUN npm install
+RUN npm run compile
+
+CMD ["/usr/bin/supervisord"]
