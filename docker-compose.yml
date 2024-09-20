@@ -12,6 +12,7 @@ services:
      - ./src:/usr/src/app/src
      - ./test:/usr/src/app/test
      - ./.env:/usr/src/app/.env
+     - ./start.sh:/usr/src/app/start.sh
      - ./console.ts:/usr/src/app/console.ts
      - ./database.json:/usr/src/app/database.json
      - ./mocha.opts:/usr/src/app/mocha.opts

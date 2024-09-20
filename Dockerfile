@@ -18,4 +18,4 @@ WORKDIR /usr/src/app
 RUN npm install
 RUN npm run compile
 
-CMD ["/usr/bin/supervisord"]
+CMD ["/usr/src/app/start.sh"]
