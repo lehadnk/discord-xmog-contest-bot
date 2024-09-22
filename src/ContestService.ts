@@ -58,7 +58,9 @@ export class ContestService {
                         this.participantRepository
                             .addParticipant(participant)
                             .then(() => {
-                                resolve(new AddParticipantResult(true));
+                                let result = new AddParticipantResult(true);
+                                result.normalizedParticipantLine = `${participant.name} - ${participant.realmNormalized}`
+                                resolve(result);
                             }).catch(reason => {
                                 if (reason.code == undefined) {
                                     console.error(reason);

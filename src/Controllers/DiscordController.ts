@@ -60,7 +60,10 @@ export class DiscordController {
                     .handleAddParticipantRequest(addParticipantRequest)
                     .then(result => {
                         if (result.isSuccess) {
-                            resolve(new DiscordControllerResponse(null, msg, false));
+                            let response = new DiscordControllerResponse(null, msg, true);
+                            response.metadata.normalizedParticipantLine = result.normalizedParticipantLine
+                            response.metadata.imageUrl = addParticipantRequest.participantImageUrl
+                            resolve(response);
                             return;
                         }
 

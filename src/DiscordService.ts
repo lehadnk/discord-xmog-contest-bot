@@ -4,6 +4,7 @@ import {DiscordController} from "./Controllers/DiscordController";
 import {ContestService} from "./ContestService";
 import {getClassColor, getMsgAuthorName} from "./Helpers/ChatMessageHelpers";
 import {DiscordAttachment} from "./DTO/DiscordAttachment";
+import {DiscordControllerResponse} from "./DTO/DiscordControllerResponse";
 
 export class DiscordService {
     private readonly discordClient;
@@ -52,6 +53,9 @@ export class DiscordService {
             this.controller
                 .dispatch(parsedMessage)
                 .then(result => {
+                    if (result.syncMessageData) {
+                        this.syncMessage(msg, result);
+                    }
                     if (result.removeOriginalMessage) {
                         msg.delete().catch(reason => {
                             console.error("Unable to delete message in server " + msg.guild.name + ", reason: " + reason);
@@ -62,26 +66,25 @@ export class DiscordService {
                             .send(result.responseMessage)
                             .then(m => m.delete({ timeout: this.messageLifeTime }));
                     }
-                    if (result.syncMessageData) {
-                        this.syncMessage(msg);
-                    }
                 });
         });
     }
 
-    private syncMessage(msg)
+    private syncMessage(msg, controllerResponse: DiscordControllerResponse)
     {
+        let voteLine = `\`\`\`/vote ${controllerResponse.metadata.normalizedParticipantLine}\`\`\``
         const embed = new MessageEmbed()
             .setAuthor(getMsgAuthorName(msg), msg.author.displayAvatarURL)
-            .setDescription(msg.content)
+            .setDescription(msg.content + voteLine)
             .setColor(getClassColor(msg.guild.id));
 
         if (msg.attachments.first() !== undefined) {
-            embed.setImage(msg.attachments.first().url);
+            embed.setImage(controllerResponse.metadata.imageUrl ? controllerResponse.metadata.imageUrl: msg.attachments.first().url);
         }
 
         this.discordClient.guilds.cache.forEach(function (guild) {
-            if (guild.id !== msg.guild.id) {
+            if (guild.id !== msg.guild.id || controllerResponse.removeOriginalMessage) {
+            // if (guild.id !== msg.guild.id || true) {
                 const channels = guild.channels.cache
                 const channel = channels.find(c => c.name == msg.channel.name);
                 if (channel !== null) {
