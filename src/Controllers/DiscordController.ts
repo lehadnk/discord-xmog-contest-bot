@@ -28,7 +28,7 @@ export class DiscordController {
         }
 
         if (msg.message.substr(0, 5) === '/vote') {
-            return this.handleVoteForParticipantRequest(msg);
+            return this.handleVoteForParticipantMessage(msg);
         }
 
         // Spam message - we're just clearing it
@@ -61,7 +61,8 @@ export class DiscordController {
                     .then(result => {
                         if (result.isSuccess) {
                             let response = new DiscordControllerResponse(null, msg, true);
-                            response.metadata.normalizedParticipantLine = result.normalizedParticipantLine
+                            response.metadata.newParticipantCharacterName = result.newParticipantCharacterName
+                            response.metadata.newParticipantRealm = result.newParticipantRealm
                             response.metadata.imageUrl = addParticipantRequest.participantImageUrl
                             resolve(response);
                             return;
@@ -77,25 +78,10 @@ export class DiscordController {
         });
     }
 
-    private handleVoteForParticipantRequest(msg: DiscordMessage): Promise<DiscordControllerResponse> {
+    public handleVoteForParticipantRequest(voteRequest: VoteForParticipantRequest): Promise<DiscordControllerResponse> {
         return new Promise<DiscordControllerResponse>(resolve => {
-            let validationResult = VoteForParticipantMessageValidator.validate(msg);
-
-            if (!validationResult.isValid) {
-                resolve(new DiscordControllerResponse(validationResult.errorMessage, null, true));
-                return;
-            }
-
-            let voteForParticipantRequest = new VoteForParticipantRequest(
-                msg.authorId,
-                validationResult.fields.characterName,
-                validationResult.fields.characterRealm,
-                msg.authorName,
-                msg.authorCreatedAt
-            );
-
             this.contestService
-                .handleVoteForParticipantRequest(voteForParticipantRequest)
+                .handleVoteForParticipantRequest(voteRequest)
                 .then(result => {
                     if (result.isSuccess) {
                         // @todo better response message
@@ -110,6 +96,27 @@ export class DiscordController {
                     resolve(new DiscordControllerResponse("С ботом происходит что-то очень нехорошее, попробуйте зарегистрироваться позднее :(", null, true))
                 });
         });
+    }
+
+    public handleVoteForParticipantMessage(msg: DiscordMessage): Promise<DiscordControllerResponse> {
+        let validationResult = VoteForParticipantMessageValidator.validate(msg);
+
+        if (!validationResult.isValid) {
+            return new Promise<DiscordControllerResponse>(resolve => {
+                resolve(new DiscordControllerResponse(validationResult.errorMessage, null, true));
+                return;
+            });
+        }
+
+        let voteForParticipantRequest = new VoteForParticipantRequest(
+            msg.authorId,
+            validationResult.fields.characterName,
+            validationResult.fields.characterRealm,
+            msg.authorName,
+            msg.authorCreatedAt
+        );
+
+        return this.handleVoteForParticipantRequest(voteForParticipantRequest);
     }
 
     private handleAnnounceRequest(msg: DiscordMessage): Promise<DiscordControllerResponse> {

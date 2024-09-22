@@ -6,7 +6,7 @@ import {ParticipantRepository} from "./src/Repositories/ParticipantRepository";
 import {VoteRepository} from "./src/Repositories/VoteRepository";
 import {ContestSettings} from "./src/DTO/ContestSettings";
 import {ContestService} from "./src/ContestService";
-import {Client} from "discord.js";
+import {Client, Intents} from "discord.js";
 import {DiscordController} from "./src/Controllers/DiscordController";
 import * as path from 'path';
 import {ImgurService} from "./src/Imgur/ImgurService";
@@ -26,7 +26,12 @@ let contestSettings = new ContestSettings(contestStartTime, contestEndTime, voti
 let contestService = new ContestService(participantRepository, votesRepository, contestSettings);
 let imgurService = new ImgurService();
 let discordController = new DiscordController(contestService, announcerIds, imgurService);
-let discordClient = new Client();
+let discordClient = new Client({
+    intents: [
+        Intents.FLAGS.GUILDS,
+        Intents.FLAGS.GUILD_MESSAGES,
+    ]
+});
 let service = new DiscordService(
     contestService,
     discordController,

@@ -59,7 +59,8 @@ export class ContestService {
                             .addParticipant(participant)
                             .then(() => {
                                 let result = new AddParticipantResult(true);
-                                result.normalizedParticipantLine = `${participant.name} - ${participant.realmNormalized}`
+                                result.newParticipantCharacterName = participant.name
+                                result.newParticipantRealm = participant.realmNormalized
                                 resolve(result);
                             }).catch(reason => {
                                 if (reason.code == undefined) {

@@ -27,11 +27,15 @@ export class AddParticipantMessageValidator {
             return new ValidatorResult(false, "Пожалуйста, введите ваш рилм");
         }
 
-        if (characterName.length > 30) {
+        const unacceptableSymbolsCharacter = /[|/\\?&_*!@ ]/;
+
+        if (characterName.length > 30 || unacceptableSymbolsCharacter.test(characterName)) {
             return new ValidatorResult(false, "Пожалуйста, введите корректное имя персонажа");
         }
 
-        if (characterRealm.length > 30) {
+        const unacceptableSymbolsRealm = /[|/\\?&_*!@]/;
+
+        if (characterRealm.length > 30 || unacceptableSymbolsRealm.test(characterRealm)) {
             return new ValidatorResult(false, "Пожалуйста, введите корректное название рилма");
         }
 

@@ -3,14 +3,19 @@ import {config as dotenvInit} from "dotenv";
 import {Database} from "sqlite3";
 import {SqliteDbAdapter} from "./src/SqliteDbAdapter";
 import {ParticipantRepository} from "./src/Repositories/ParticipantRepository";
-import {Client} from 'discord.js';
+import {Client, Intents} from 'discord.js';
 
 dotenvInit();
 
 let db = new Database('./db/prod-db.db3');
 let adapter = new SqliteDbAdapter(db);
 let participantRepository = new ParticipantRepository(adapter);
-let discordClient = new Client();
+let discordClient = new Client({
+    intents: [
+        Intents.FLAGS.GUILDS,
+        Intents.FLAGS.GUILD_MESSAGES,
+    ]
+});
 
 let commandService = new CommandService(participantRepository, discordClient, adapter);
 

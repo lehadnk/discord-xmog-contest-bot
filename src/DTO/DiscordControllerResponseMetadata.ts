@@ -1,5 +1,6 @@
 
 export class DiscordControllerResponseMetadata {
-    public normalizedParticipantLine: string;
+    public newParticipantCharacterName: string;
+    public newParticipantRealm: string;
     public imageUrl: string;
 }

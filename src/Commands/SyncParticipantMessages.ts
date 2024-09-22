@@ -1,7 +1,7 @@
 import {default as ICommand} from "./ICommand";
 import AbstractCommand from "./AbstractCommand";
 import {Participant} from "../Models/Participant";
-import {Guild, TextChannel, Message, Collection, MessageEmbed} from 'discord.js';
+import {Guild, TextChannel, Message, Collection, MessageEmbed, MessageActionRow, MessageButton} from 'discord.js';
 import {getClassColor, normalizeRealmName} from "../Helpers/ChatMessageHelpers";
 
 export default class SyncParticipantMessages extends AbstractCommand implements ICommand {
@@ -14,7 +14,7 @@ export default class SyncParticipantMessages extends AbstractCommand implements 
     async run(args: string[]) {
         this.participants = await this.participantRepository.getAllParticipants();
 
-        let guilds = this.discordClient.guilds.cache.array();
+        let guilds = Array.from(this.discordClient.guilds.cache.values());
         let keys = Object.keys(guilds);
         for (let k in keys) {
             let guild = guilds[k];
@@ -40,7 +40,7 @@ export default class SyncParticipantMessages extends AbstractCommand implements 
         let channel: TextChannel;
         // @ts-ignore
         const channels = guild.channels.cache;
-        channel = guild.channels.cache.find(c => c.name == process.env.CONTEST_CHANNEL_NAME && c.type == 'text');
+        channel = guild.channels.cache.find(c => c.name == process.env.CONTEST_CHANNEL_NAME && c.type == "GUILD_TEXT");
         if (!channel) {
             return;
         }
@@ -110,6 +110,15 @@ export default class SyncParticipantMessages extends AbstractCommand implements 
             .setColor(getClassColor(guildId));
         embed.setImage(participant.imageUrl);
 
-        channel.send({embed}).catch(r => console.error("Unable to sync message to " + guildId + ": " + r));
+        let row = new MessageActionRow()
+            .addComponents(
+                new MessageButton()
+                    .setCustomId(`VOTE__${participant.name}__${participant.realm}`)
+                    .setLabel('Голосовать')
+                    .setStyle('PRIMARY')
+                // .setDisabled(true)
+            );
+
+        channel.send({embeds: [embed], components: [row]}).catch(r => console.error("Unable to sync message to " + guildId + ": " + r));
     }
 }

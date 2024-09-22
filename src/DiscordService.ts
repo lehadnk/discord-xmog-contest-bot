@@ -1,10 +1,11 @@
-import {Client, MessageEmbed} from 'discord.js';
+import {Client, MessageActionRow, MessageButton, MessageEmbed} from 'discord.js';
 import {DiscordMessage} from "./DTO/DiscordMessage";
 import {DiscordController} from "./Controllers/DiscordController";
 import {ContestService} from "./ContestService";
 import {getClassColor, getMsgAuthorName} from "./Helpers/ChatMessageHelpers";
 import {DiscordAttachment} from "./DTO/DiscordAttachment";
 import {DiscordControllerResponse} from "./DTO/DiscordControllerResponse";
+import {VoteForParticipantRequest} from "./DTO/Requests/VoteForParticipantRequest";
 
 export class DiscordService {
     private readonly discordClient;
@@ -24,7 +25,33 @@ export class DiscordService {
     }
 
     private setupHandlers() {
-        this.discordClient.on("message", msg => {
+        this.discordClient.on('interactionCreate', interaction => {
+            if (!interaction.isButton()) {return;}
+            if (interaction.customId.startsWith("VOTE__")) {
+                let participantName = interaction.customId.split("__")[1];
+                let participantRealm = interaction.customId.split("__")[2];
+                let msg = new VoteForParticipantRequest(
+                    interaction.user.id,
+                    participantName,
+                    participantRealm,
+                    interaction.user.username,
+                    interaction.user.createdAt,
+                )
+                this.controller.handleVoteForParticipantRequest(msg).then(
+                    result => {
+                        if (result.responseMessage) {
+                            interaction.reply({ content: result.responseMessage, ephemeral: true })
+                            return;
+                        }
+                    }
+                )
+            } else {
+                interaction.reply({ content: "Ошибка", ephemeral: true })
+            }
+        });
+
+
+        this.discordClient.on("messageCreate", msg => {
             if (msg.channel.name != this.contestChannel) {
                 return;
             }
@@ -57,14 +84,16 @@ export class DiscordService {
                         this.syncMessage(msg, result);
                     }
                     if (result.removeOriginalMessage) {
-                        msg.delete().catch(reason => {
-                            console.error("Unable to delete message in server " + msg.guild.name + ", reason: " + reason);
-                        });
+                        setTimeout( () => {
+                            msg.delete().catch(reason => {
+                                console.error("Unable to delete message in server " + msg.guild.name + ", reason: " + reason);
+                            });
+                        }, this.messageLifeTime)
                     }
                     if (result.responseMessage) {
                         msg.channel
                             .send(result.responseMessage)
-                            .then(m => m.delete({ timeout: this.messageLifeTime }));
+                            .then(m => setTimeout(() => m.delete({ timeout: this.messageLifeTime }), this.messageLifeTime));
                     }
                 });
         });
@@ -72,23 +101,37 @@ export class DiscordService {
 
     private syncMessage(msg, controllerResponse: DiscordControllerResponse)
     {
-        let voteLine = `\`\`\`/vote ${controllerResponse.metadata.normalizedParticipantLine}\`\`\``
         const embed = new MessageEmbed()
             .setAuthor(getMsgAuthorName(msg), msg.author.displayAvatarURL)
-            .setDescription(msg.content + voteLine)
+            .setDescription(msg.content)
             .setColor(getClassColor(msg.guild.id));
 
         if (msg.attachments.first() !== undefined) {
-            embed.setImage(controllerResponse.metadata.imageUrl ? controllerResponse.metadata.imageUrl: msg.attachments.first().url);
+            // embed.setImage(controllerResponse.metadata.imageUrl ? controllerResponse.metadata.imageUrl: msg.attachments.first().url);
+            embed.setImage(msg.attachments.first().url);
         }
 
         this.discordClient.guilds.cache.forEach(function (guild) {
             if (guild.id !== msg.guild.id || controllerResponse.removeOriginalMessage) {
-            // if (guild.id !== msg.guild.id || true) {
                 const channels = guild.channels.cache
                 const channel = channels.find(c => c.name == msg.channel.name);
                 if (channel !== null) {
-                    channel.send({embed}).catch(r => console.error("Unable to sync message to " + guild.name + ": " + r));
+                    let row = null;
+                    if (controllerResponse.metadata.newParticipantCharacterName) {
+                        row = new MessageActionRow()
+                            .addComponents(
+                                new MessageButton()
+                                    .setCustomId(`VOTE__${controllerResponse.metadata.newParticipantCharacterName}__${controllerResponse.metadata.newParticipantRealm}`)
+                                    .setLabel('Голосовать')
+                                    .setStyle('PRIMARY')
+                                    // .setDisabled(true)
+                            );
+                    }
+                    let payload = {embeds: [embed]};
+                    if (row !== null) {
+                        payload["components"] = [row]
+                    }
+                    channel.send(payload).catch(r => console.error("Unable to sync message to " + guild.name + ": " + r));
                 }
             }
         });

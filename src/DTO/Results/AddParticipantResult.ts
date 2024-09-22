@@ -1,7 +1,8 @@
 export class AddParticipantResult {
     public readonly messageResponse: string;
     public readonly isSuccess: boolean;
-    public normalizedParticipantLine: string;
+    public newParticipantCharacterName: string;
+    public newParticipantRealm: string;
 
     constructor(isSuccess: boolean, messageResponse?: string) {
         this.isSuccess = isSuccess;
