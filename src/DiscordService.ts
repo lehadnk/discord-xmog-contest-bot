@@ -107,8 +107,8 @@ export class DiscordService {
             .setColor(getClassColor(msg.guild.id));
 
         if (msg.attachments.first() !== undefined) {
-            // embed.setImage(controllerResponse.metadata.imageUrl ? controllerResponse.metadata.imageUrl: msg.attachments.first().url);
-            embed.setImage(msg.attachments.first().url);
+            embed.setImage(controllerResponse.metadata.imageUrl ? controllerResponse.metadata.imageUrl: msg.attachments.first().url);
+            // embed.setImage(msg.attachments.first().url);
         }
 
         this.discordClient.guilds.cache.forEach(function (guild) {
