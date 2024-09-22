@@ -7,7 +7,7 @@ import {Client} from 'discord.js';
 
 dotenvInit();
 
-let db = new Database('./prod-db.db3');
+let db = new Database('./db/prod-db.db3');
 let adapter = new SqliteDbAdapter(db);
 let participantRepository = new ParticipantRepository(adapter);
 let discordClient = new Client();

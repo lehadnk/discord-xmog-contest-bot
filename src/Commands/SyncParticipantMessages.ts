@@ -14,7 +14,7 @@ export default class SyncParticipantMessages extends AbstractCommand implements 
     async run(args: string[]) {
         this.participants = await this.participantRepository.getAllParticipants();
 
-        let guilds = this.discordClient.guilds.array();
+        let guilds = this.discordClient.guilds.cache.array();
         let keys = Object.keys(guilds);
         for (let k in keys) {
             let guild = guilds[k];
@@ -30,7 +30,7 @@ export default class SyncParticipantMessages extends AbstractCommand implements 
                 let participantPosts = bucket.filter(msg => this.isParticipantPost(msg, participant.name, participant.realmNormalized));
                 if (participantPosts.size == 0) {
                     this.syncParticipantMessage(participant, guildId);
-                    console.log(participant.name + " is not synced with " + guildId);
+                    console.log(participant.name + ' - ' + participant.realm + " is not synced with " + guildId);
                 }
             });
         });
@@ -48,7 +48,7 @@ export default class SyncParticipantMessages extends AbstractCommand implements 
         this.guildChannels.set(guild.id, channel);
 
         let msgBucket = await this.fetchChannelMessages(channel, null);
-        msgBucket = msgBucket.filter(msg => msg.createdAt.getFullYear() == 2023); // these warlocks...
+        msgBucket = msgBucket.filter(msg => msg.createdAt.getFullYear() == 2024); // these warlocks...
 
         return msgBucket;
 
@@ -59,8 +59,8 @@ export default class SyncParticipantMessages extends AbstractCommand implements 
         if (before != null) {
             request['before'] = before;
         }
-        let messages = await channel.fetchMessages(request);
-        let lastMessageId = messages.last().id;
+        let messages = await channel.messages.fetch(request);
+        let lastMessageId = messages.last() ? messages.last().id : null;
 
         let result = messages;
         if (messages.size == 100) {
