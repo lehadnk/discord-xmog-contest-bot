@@ -98,7 +98,7 @@ export class DiscordController {
         });
     }
 
-    public handleVoteForParticipantMessage(msg: DiscordMessage): Promise<DiscordControllerResponse> {
+    private handleVoteForParticipantMessage(msg: DiscordMessage): Promise<DiscordControllerResponse> {
         let validationResult = VoteForParticipantMessageValidator.validate(msg);
 
         if (!validationResult.isValid) {
