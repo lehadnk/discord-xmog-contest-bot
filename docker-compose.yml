@@ -8,24 +8,26 @@ services:
     container_name: xmog-backend
 
     volumes:
-     - ./migrations:/usr/src/app/migrations
-     - ./src:/usr/src/app/src
-     - ./test:/usr/src/app/test
-     - ./.env:/usr/src/app/.env
-     - ./start.sh:/usr/src/app/start.sh
-     - ./console.ts:/usr/src/app/console.ts
-     - ./database.json:/usr/src/app/database.json
-     - ./mocha.opts:/usr/src/app/mocha.opts
-     - ./package.json:/usr/src/app/package.json
-     - ./package-lock.json:/usr/src/app/package-lock.json
-#     - ./prod-db.db3:/usr/src/app/prod-db.db3
-     - ./run.ts:/usr/src/app/run.ts
-     - ./site.ts:/usr/src/app/site.ts
-     - ./tsconfig.json:/usr/src/app/tsconfig.json
-     - ./supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
-     - ./db:/usr/src/app/db
-     - discord-bot-node-modules:/usr/src/app/node_modules
-     - discord-bot-build:/usr/src/app/build
+      - ./migrations:/usr/src/app/migrations
+      - ./src:/usr/src/app/src
+      - ./test:/usr/src/app/test
+      - ./.env:/usr/src/app/.env
+      - ./start.sh:/usr/src/app/start.sh
+      - ./console.ts:/usr/src/app/console.ts
+      - ./database.json:/usr/src/app/database.json
+      - ./mocha.opts:/usr/src/app/mocha.opts
+      - ./package.json:/usr/src/app/package.json
+      - ./package-lock.json:/usr/src/app/package-lock.json
+      - ./run.ts:/usr/src/app/run.ts
+      - ./site.ts:/usr/src/app/site.ts
+      - ./tsconfig.json:/usr/src/app/tsconfig.json
+      - ./supervisord.conf:/etc/supervisor/conf.d/supervisord.conf
+      - ./db:/usr/src/app/db
+      - discord-bot-node-modules:/usr/src/app/node_modules
+      - discord-bot-build:/usr/src/app/build
+
+    networks:
+      - shared
 
     ports:
       - "9000:9000"
@@ -33,3 +35,7 @@ services:
 volumes:
   discord-bot-node-modules:
   discord-bot-build:
+
+networks:
+  shared:
+    external: true
