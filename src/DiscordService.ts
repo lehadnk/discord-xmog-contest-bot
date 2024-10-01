@@ -102,7 +102,7 @@ export class DiscordService {
     private syncMessage(msg, controllerResponse: DiscordControllerResponse)
     {
         const embed = new MessageEmbed()
-            .setAuthor(getMsgAuthorName(msg), msg.author.displayAvatarURL)
+            .setAuthor(getMsgAuthorName(msg), msg.author.displayAvatarURL())
             .setDescription(msg.content)
             .setColor(getClassColor(msg.guild.id));
 
