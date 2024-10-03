@@ -6,21 +6,32 @@ import {VoteForParticipantRequest} from "../DTO/Requests/VoteForParticipantReque
 import {AddParticipantMessageValidator} from "../Validators/AddParticipantMessageValidator";
 import {VoteForParticipantMessageValidator} from "../Validators/VoteForParticipantMessageValidator";
 import {ImgurService} from "../Imgur/ImgurService";
+import {SyncParticipantMessages} from "../Commands";
 
 export class DiscordController {
     private readonly contestService: ContestService;
     private readonly contestAnnouncerIds: string[];
     private readonly imgurService: ImgurService;
+    private readonly syncer: SyncParticipantMessages;
 
-    constructor(contestService: ContestService, contestAnnouncerIds: string[], imgurService: ImgurService) {
+    constructor(contestService: ContestService, contestAnnouncerIds: string[], imgurService: ImgurService, syncer: SyncParticipantMessages) {
         this.contestAnnouncerIds = contestAnnouncerIds;
         this.contestService = contestService;
         this.imgurService = imgurService;
+        this.syncer = syncer;
     }
 
     dispatch(msg: DiscordMessage): Promise<DiscordControllerResponse> {
         if (this.contestAnnouncerIds.indexOf(msg.authorId) != -1) {
-            return this.handleAnnounceRequest(msg);
+            if (msg.message === "!sync") {
+                this.syncer.run([], msg.channelId).then(() => {
+                    return new Promise<DiscordControllerResponse>((resolve) => {
+                        resolve(new DiscordControllerResponse(null, null, true));
+                    });
+                })
+            } else {
+                return this.handleAnnounceRequest(msg);
+            }
         }
 
         if (msg.attachedImages.length > 0) {

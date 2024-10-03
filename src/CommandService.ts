@@ -3,6 +3,7 @@ import {IParticipantRepository} from "./Repositories/IParticipantRepository";
 import {Client} from "discord.js";
 import {ICommand} from "./Commands";
 import {IDbAdapter} from "./IDbAdapter";
+import * as process from "process";
 
 export class CommandService {
 
@@ -26,6 +27,8 @@ export class CommandService {
             return;
         }
 
-        handler.run(args);
+        handler.run(args).then(() => {
+            process.exit(0)
+        })
     }
 }

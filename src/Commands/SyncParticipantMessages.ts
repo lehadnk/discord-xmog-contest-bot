@@ -4,48 +4,58 @@ import {Participant} from "../Models/Participant";
 import {Guild, TextChannel, Message, Collection, MessageEmbed, MessageActionRow, MessageButton} from 'discord.js';
 import {getClassColor, normalizeRealmName} from "../Helpers/ChatMessageHelpers";
 
-export default class SyncParticipantMessages extends AbstractCommand implements ICommand {
+export default class SyncParticipantMessages extends AbstractCommand {
     name: string = 'sync-messages';
 
-    private participants: Participant[];
-    private msgBuckets: Map<string, Collection<string, Message>> = new Map<string, Collection<string, Message>>();
-    private guildChannels: Map<string, TextChannel> = new Map<string, TextChannel>();
 
-    async run(args: string[]) {
-        this.participants = await this.participantRepository.getAllParticipants();
+    async run(args: string[], channelId: string) {
+        let participants = await this.participantRepository.getAllParticipants();
+        let guildChannels: Map<string, TextChannel> = new Map<string, TextChannel>();
+        let msgBuckets: Map<string, Collection<string, Message>> = new Map<string, Collection<string, Message>>();
 
         let guilds = Array.from(this.discordClient.guilds.cache.values());
         let keys = Object.keys(guilds);
         for (let k in keys) {
             let guild = guilds[k];
-            let messages = await this.fetchServerMessages(guild);
-            if (messages != undefined) {
-                this.msgBuckets.set(guild.id, messages);
-                console.log('Adding ' + guild.name + ' posts...');
+            console.log('Reading ' + guild.name + ' messages... ' + guild.id);
+            // const channels = guild.channels.cache;
+            let channel = guild.channels.cache.find(c => c.name == process.env.CONTEST_CHANNEL_NAME && c.type == "GUILD_TEXT");
+            if (!channel) {
+                console.log('Channel ' + guild.name + ' not found');
+                continue;
+            }
+
+            if (!channelId || channel.id == channelId) {
+                guildChannels.set(guild.id, channel);
+
+                let messages = await this.fetchServerMessages(guild, channel);
+                if (messages != undefined) {
+                    msgBuckets.set(guild.id, messages);
+                    console.log('Adding ' + guild.name + ' posts...');
+                }
             }
         }
 
-        this.participants.forEach(participant => {
-            this.msgBuckets.forEach((bucket, guildId) => {
-                let participantPosts = bucket.filter(msg => this.isParticipantPost(msg, participant.name, participant.realmNormalized));
+        // let channel = this.guildChannels.get(guildId);
+        msgBuckets.forEach((bucket, guildId) => {
+            // let channel = guildChannels.get(guildId);
+            let guild= this.discordClient.guilds.cache.get(guildId)
+            let channel = guild.channels.cache.find(c => c.name == process.env.CONTEST_CHANNEL_NAME && c.type == "GUILD_TEXT");
+
+            participants.forEach(participant => {
+                let participantPosts = bucket.filter(msg => this.isParticipantPost(msg, participant.name, participant.realm));
                 if (participantPosts.size == 0) {
-                    this.syncParticipantMessage(participant, guildId);
+                    this.syncParticipantMessage(participant, guildId, channel);
                     console.log(participant.name + ' - ' + participant.realm + " is not synced with " + guildId);
                 }
             });
         });
     }
 
-    private async fetchServerMessages(guild: Guild): Promise<Collection<string, Message>> {
-        let channel: TextChannel;
+    private async fetchServerMessages(guild: Guild, channel): Promise<Collection<string, Message>> {
         // @ts-ignore
-        const channels = guild.channels.cache;
-        channel = guild.channels.cache.find(c => c.name == process.env.CONTEST_CHANNEL_NAME && c.type == "GUILD_TEXT");
-        if (!channel) {
-            return;
-        }
-
-        this.guildChannels.set(guild.id, channel);
+        console.log('fetchChannelMessages for ' + guild.name + ' in channel ' + channel.id);
+        // channel.send("test?");
 
         let msgBucket = await this.fetchChannelMessages(channel, null);
         msgBucket = msgBucket.filter(msg => msg.createdAt.getFullYear() == 2024); // these warlocks...
@@ -60,6 +70,7 @@ export default class SyncParticipantMessages extends AbstractCommand implements 
             request['before'] = before;
         }
         let messages = await channel.messages.fetch(request);
+        console.log(`messages received for channel (${messages.size})`);
         let lastMessageId = messages.last() ? messages.last().id : null;
 
         let result = messages;
@@ -95,16 +106,16 @@ export default class SyncParticipantMessages extends AbstractCommand implements 
         let characterName = characterFields[0].trim();
         let characterRealm = characterFields[1].trim();
 
-        return characterName == participantName && normalizeRealmName(characterRealm) === participantRealm;
+        let check = characterName == participantName && normalizeRealmName(characterRealm) === normalizeRealmName(participantRealm);
+        if (!check) {
+            let b = 0;
+        }
+
+        return characterName == participantName && normalizeRealmName(characterRealm) === normalizeRealmName(participantRealm);
     }
 
-    private syncParticipantMessage(participant: Participant, guildId: string)
+    private syncParticipantMessage(participant: Participant, guildId: string, channel)
     {
-        if (!this.guildChannels.has(guildId)) {
-            throw new Error("Cannot find xmog contest channel for " + guildId);
-        }
-        let channel = this.guildChannels.get(guildId);
-
         const embed = new MessageEmbed()
             .setDescription(participant.name + ' - ' + participant.realm)
             .setColor(getClassColor(guildId));
@@ -119,6 +130,11 @@ export default class SyncParticipantMessages extends AbstractCommand implements 
                 // .setDisabled(true)
             );
 
-        channel.send({embeds: [embed], components: [row]}).catch(r => console.error("Unable to sync message to " + guildId + ": " + r));
+        let payload = {embeds: [embed]};
+        if (row !== null) {
+            payload["components"] = [row]
+        }
+
+        channel.send(payload).catch(r => console.error("Unable to sync message to " + guildId + ": " + r));
     }
 }

@@ -10,6 +10,7 @@ import {Client, Intents} from "discord.js";
 import {DiscordController} from "./src/Controllers/DiscordController";
 import * as path from 'path';
 import {ImgurService} from "./src/Imgur/ImgurService";
+import SyncParticipantMessages from "./src/Commands/SyncParticipantMessages";
 
 dotenvInit({path: path.resolve(__dirname, '../.env') });
 
@@ -25,13 +26,21 @@ let votesRepository = new VoteRepository(adapter);
 let contestSettings = new ContestSettings(contestStartTime, contestEndTime, votingStartTime);
 let contestService = new ContestService(participantRepository, votesRepository, contestSettings);
 let imgurService = new ImgurService();
-let discordController = new DiscordController(contestService, announcerIds, imgurService);
+
 let discordClient = new Client({
     intents: [
         Intents.FLAGS.GUILDS,
         Intents.FLAGS.GUILD_MESSAGES,
     ]
 });
+
+let syncer = new SyncParticipantMessages();
+syncer.db = adapter;
+syncer.participantRepository = participantRepository;
+syncer.discordClient = discordClient;
+
+let discordController = new DiscordController(contestService, announcerIds, imgurService, syncer);
+
 let service = new DiscordService(
     contestService,
     discordController,

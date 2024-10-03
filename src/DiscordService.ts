@@ -6,6 +6,7 @@ import {getClassColor, getMsgAuthorName} from "./Helpers/ChatMessageHelpers";
 import {DiscordAttachment} from "./DTO/DiscordAttachment";
 import {DiscordControllerResponse} from "./DTO/DiscordControllerResponse";
 import {VoteForParticipantRequest} from "./DTO/Requests/VoteForParticipantRequest";
+import SyncParticipantMessages from "./Commands/SyncParticipantMessages";
 
 export class DiscordService {
     private readonly discordClient;

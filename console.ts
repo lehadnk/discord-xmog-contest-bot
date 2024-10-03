@@ -1,11 +1,13 @@
+import {config as dotenvInit} from 'dotenv';
+
 import {CommandService} from "./src/CommandService";
-import {config as dotenvInit} from "dotenv";
 import {Database} from "sqlite3";
 import {SqliteDbAdapter} from "./src/SqliteDbAdapter";
 import {ParticipantRepository} from "./src/Repositories/ParticipantRepository";
 import {Client, Intents} from 'discord.js';
+import * as path from 'path';
 
-dotenvInit();
+dotenvInit({path: path.resolve(__dirname, '../.env') });
 
 let db = new Database('./db/prod-db.db3');
 let adapter = new SqliteDbAdapter(db);
