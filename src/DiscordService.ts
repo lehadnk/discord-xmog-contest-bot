@@ -116,7 +116,7 @@ export class DiscordService {
             if (guild.id !== msg.guild.id || controllerResponse.removeOriginalMessage) {
                 const channels = guild.channels.cache
                 const channel = channels.find(c => c.name == msg.channel.name);
-                if (channel !== null) {
+                if (channel !== null && channel !== undefined) {
                     let row = null;
                     if (controllerResponse.metadata.newParticipantCharacterName) {
                         row = new MessageActionRow()
