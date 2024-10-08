@@ -84,7 +84,7 @@ export class ContestService {
                 let votingStartsDate = new Date(this.contestSettings.votingStartsAt);
                 // let votingStartsDateString = votingStartsDate.toLocaleDateString() + " " + votingStartsDate.toLocaleTimeString();
                 let votingStartsDateString = votingStartsDate.toLocaleString('ru-RU', {timeZone: 'Europe/Moscow'});
-                resolve(new VoteForParticipantResult(false, "Голосование еще не началось. Прием голосов начнется " + votingStartsDateString + "."))
+                resolve(new VoteForParticipantResult(false, "Голосование еще не началось. Из-за внеплановой блокировки Discord голосование было перенесено на неделю вперед. Прием голосов начнется " + votingStartsDateString + "."))
                 return;
             }
 
