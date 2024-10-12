@@ -80,7 +80,8 @@ export class ContestService {
     handleVoteForParticipantRequest(request: VoteForParticipantRequest): Promise<VoteForParticipantResult> {
         return new Promise<VoteForParticipantResult>(resolve => {
 
-            if (Date.now() < this.contestSettings.votingStartsAt) {
+            // TODO vote test hack. remove when done
+            if (request.voterDiscordId !== "208512819266584576" && Date.now() < this.contestSettings.votingStartsAt) {
                 let votingStartsDate = new Date(this.contestSettings.votingStartsAt);
                 // let votingStartsDateString = votingStartsDate.toLocaleDateString() + " " + votingStartsDate.toLocaleTimeString();
                 let votingStartsDateString = votingStartsDate.toLocaleString('ru-RU', {timeZone: 'Europe/Moscow'});
