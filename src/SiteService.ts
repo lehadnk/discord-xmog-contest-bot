@@ -90,7 +90,7 @@ export default class SiteService {
                             ") as wv ON p.id = wv.participant_id\n" +
                             "WHERE p.isBanned = FALSE\n" +
                             "GROUP BY p.name, p.realm\n" +
-                            "ORDER BY votes DESC");
+                            "ORDER BY p.name DESC");
 
                     if (process.env.IS_VOTES_PUBLIC !== 'true') {
                         result.forEach(resultItem => {
