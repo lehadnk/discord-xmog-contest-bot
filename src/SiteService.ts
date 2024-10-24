@@ -83,14 +83,14 @@ export default class SiteService {
                             "               JOIN (SELECT participant_id, count(id) as score\n" +
                             "                     FROM votes\n" +
                             "                     GROUP BY participant_id) ps ON ps.participant_id = v.participant_id\n" +
-                            "        WHERE votes_cnt < 3\n" +
+                            "        WHERE votes_cnt < 2\n" +
                             "        ORDER BY ps.score DESC\n" +
                             "    )\n" +
                             "    GROUP BY participant_id\n" +
                             ") as wv ON p.id = wv.participant_id\n" +
-                            "WHERE p.isBanned = FALSE\n" +
+                            "WHERE p.isBanned = 0\n" +
                             "GROUP BY p.name, p.realm\n" +
-                            "ORDER BY RANDOM() DESC");
+                            "ORDER BY votes DESC");
 
                     if (process.env.IS_VOTES_PUBLIC !== 'true') {
                         result.forEach(resultItem => {
@@ -123,7 +123,7 @@ export default class SiteService {
                             "               JOIN (SELECT participant_id, count(id) as score\n" +
                             "                     FROM votes\n" +
                             "                     GROUP BY participant_id) ps ON ps.participant_id = v.participant_id\n" +
-                            "        WHERE votes_cnt < 3\n" +
+                            "        WHERE votes_cnt < 2\n" +
                             "        ORDER BY ps.score DESC) dqv ON dqv.voter_discord_id = v.voter_discord_id\n" +
                             "WHERE participant_id = ?1" +
                             "ORDER BY disqualified", {
